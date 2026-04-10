@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Golf — Pebble Beach</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <div class="header-left">
+        <span class="course-name">CORPORATE GOLF</span>
+        <span class="hole-info" id="hole-info">HOLE 1</span>
+      </div>
+      <div class="header-center">
+        <button class="stat-btn" id="stat-btn" title="Character Sheet">◈ STATS</button>
+        <button class="stat-btn mp-btn" id="mp-btn" title="Multiplayer">⚑ MULTI</button>
+        <span class="mp-player-count" id="mp-player-count"></span>
+      </div>
+      <div class="header-right">
+        <span class="score-display" id="score-display">E</span>
+        <span class="score-label">SCORE</span>
+      </div>
+    </header>
+
+    <main id="narrative-area">
+      <div id="narrative-text" class="narrative-text"></div>
+      <div id="choices-area" class="choices-area"></div>
+      <div id="action-area" class="action-area"></div>
+    </main>
+
+    <footer id="footer">
+      <div class="trait-bar" id="trait-bar"></div>
+      <div class="scorecard-mini" id="scorecard-mini"></div>
+    </footer>
+  </div>
+
+  <!-- Character Sheet Overlay -->
+  <div id="character-sheet-overlay" class="cs-overlay">
+    <div class="cs-panel">
+      <button class="cs-close" id="cs-close-btn">✕</button>
+      <div class="cs-content" id="cs-content"></div>
+    </div>
+  </div>
+
+  <!-- Perk Unlock Overlay -->
+  <div id="perk-unlock-overlay" class="pu-overlay">
+    <div class="pu-panel" id="pu-panel"></div>
+  </div>
+
+  <!-- Multiplayer Overlays -->
+  <div id="mp-overlay" class="mp-overlay">
+    <div class="mp-panel" id="mp-content"></div>
+  </div>
+  <div id="mp-encounter-overlay" class="mp-enc-overlay">
+    <div class="mp-enc-panel" id="mp-encounter-content"></div>
+  </div>
+  <div id="mp-notification" class="mp-notification"></div>
+
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="course-data.js"></script>
+  <script src="scenarios.js"></script>
+  <script src="skill-trees.js"></script>
+  <script src="engine.js"></script>
+  <script src="story-arc.js"></script>
+  <script src="dialogue-trees.js"></script>
+  <script src="ui.js"></script>
+  <script src="audio-player.js"></script>
+  <script src="mp-client.js"></script>
+  <script src="mp-ui.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

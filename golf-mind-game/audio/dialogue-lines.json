@@ -1,0 +1,120 @@
+{
+  "_meta": {
+    "description": "All voice lines for Golf Mind Game, organized by voice and category. Each line has an ElevenLabs-ready prompt with emotion/delivery direction in angle brackets.",
+    "usage": "Feed each 'prompt' to ElevenLabs TTS with the corresponding voice from voice-manifest.json"
+  },
+
+  "dave": {
+    "hole_reactions": [
+      { "id": "d_birdie_1", "context": "player makes birdie", "prompt": "<impressed, genuine> That's how you play that hole." },
+      { "id": "d_par_1", "context": "player makes par", "prompt": "<casual, encouraging> Solid par. On to the next one." },
+      { "id": "d_bogey_1", "context": "player makes bogey", "prompt": "<sympathetic shrug> Bogey's not the end of the world. Plenty of golf left." },
+      { "id": "d_double_1", "context": "player makes double+", "prompt": "<quiet, giving space> ...yeah." },
+      { "id": "d_eagle_1", "context": "player makes eagle", "prompt": "<stunned> No way. No. Way. Did that just happen?" },
+      { "id": "d_perfect_tee", "context": "player hits perfect tee shot", "prompt": "<jaw drop> Oh my god. That's... that's a bomb." },
+      { "id": "d_shank_1", "context": "player shanks", "prompt": "<trying not to react> ...yep. Alright. We'll find it." }
+    ],
+
+    "between_holes_mood": [
+      { "id": "d_mood_great_1", "context": "mood: great", "prompt": "<beaming, slap on back> Man, you are ON today. I should play with you more often — you're good luck." },
+      { "id": "d_mood_great_2", "context": "mood: great", "prompt": "<laughing> You know what, I'm buying lunch after this." },
+      { "id": "d_mood_good_1", "context": "mood: good", "prompt": "<casual, warm> Nice playing back there. Keep it up." },
+      { "id": "d_mood_good_2", "context": "mood: good", "prompt": "<offering> Not bad at all. Want a granola bar? Peanut butter chocolate." },
+      { "id": "d_mood_neutral_1", "context": "mood: neutral", "prompt": "<small talk> Beautiful day for it." },
+      { "id": "d_mood_annoyed_1", "context": "mood: annoyed", "prompt": "<slightly tense> Maybe pick up the pace a little?" },
+      { "id": "d_mood_cold_1", "context": "mood: cold", "prompt": "<on phone, distant> Yeah... yeah, might wrap up early." }
+    ],
+
+    "dialogue_tree_lines": [
+      { "id": "d_h1_good_start", "context": "after hole 1, good score", "prompt": "<impressed> Not a bad start. Most guys come out here and hack it around the first hole. You looked pretty calm out there." },
+      { "id": "d_h1_bad_start", "context": "after hole 1, bad score", "prompt": "<reassuring> Shake it off. First hole at Pebble Beach — everyone's nervous. The course opens up from here." },
+      { "id": "d_h1_laughs", "context": "player admits nerves", "prompt": "<genuine laugh> Yeah, I get it. My first time here I topped my opening tee shot. Like, topped it. Went maybe forty yards." },
+      { "id": "d_h1_eyebrow", "context": "player claims visualization", "prompt": "<skeptical half-smile> Visualizing? Like, with your eyes closed and everything?" },
+      { "id": "d_h1_impressed", "context": "player shows course knowledge", "prompt": "<surprised respect> Huh. You actually know this course." },
+      { "id": "d_h4_driver", "context": "player says driver on 4", "prompt": "<eyes wide> Driver? On four? It's 327 yards. The green is the size of your living room." },
+      { "id": "d_h4_legend", "context": "player talks about legends", "prompt": "<pause, then respect> ...alright. Let's see it then." },
+      { "id": "d_h5_scared", "context": "player admits fear on 5", "prompt": "<soft laugh> Hey, I lost two balls here my first time. Two. Just aim at the center of the green and make a swing." },
+      { "id": "d_h5_fearless", "context": "player is fearless", "prompt": "<respect, slight surprise> I like that attitude. Most people freeze up here." },
+      { "id": "d_h7_wind", "context": "discussing wind on 7", "prompt": "<analytical> Left to right, maybe 10-15 miles per hour. See the flag? It's stiff. Aim left edge and let the wind bring it back." },
+      { "id": "d_h8_chasm", "context": "before hole 8", "prompt": "<serious, weight of moment> This is it. The eighth at Pebble Beach. I don't care what your handicap is — this tee shot is going to make your heart race." },
+      { "id": "d_h8_gallows", "context": "player makes death joke", "prompt": "<nervous laugh> You're alive! I was ready to call your family." },
+      { "id": "d_bet_accept", "context": "accepts lunch bet", "prompt": "<competitive grin> Alright. You're on." },
+      { "id": "d_dad_story", "context": "shares story about his dad", "prompt": "<reflective, vulnerable> This is my third time. Second was with my dad, right before his knee surgery. He couldn't finish. We made it through seven." },
+      { "id": "d_touched", "context": "player says thanks", "prompt": "<genuinely moved, clears throat> Yeah. Yeah, it's been solid." },
+      { "id": "d_fist_bump", "context": "high impression thanks", "prompt": "<emotional but composed> You know what — same. This has been one of the best rounds I've ever played. Not the score. The round." }
+    ],
+
+    "ambient_reactions": [
+      { "id": "d_hmm", "context": "thinking", "prompt": "<thoughtful> Hmm." },
+      { "id": "d_nice", "context": "good shot", "prompt": "<approving> Nice." },
+      { "id": "d_ooh", "context": "close call", "prompt": "<wince> Ooh." },
+      { "id": "d_laugh_short", "context": "amused", "prompt": "<short chuckle>" },
+      { "id": "d_whistle", "context": "impressed", "prompt": "<low whistle>" },
+      { "id": "d_sigh", "context": "sympathetic", "prompt": "<exhale through nose>" },
+      { "id": "d_yeah", "context": "agreement", "prompt": "<casual nod> Yeah." },
+      { "id": "d_lets_go", "context": "encouragement", "prompt": "<pumped> Let's go." },
+      { "id": "d_oof", "context": "bad shot", "prompt": "<grimace> Oof." },
+      { "id": "d_alright", "context": "moving on", "prompt": "<upbeat> Alright." }
+    ]
+  },
+
+  "narrator": {
+    "scene_setting": [
+      { "id": "n_title", "context": "title screen", "prompt": "<intimate, reverent> Pebble Beach Golf Links." },
+      { "id": "n_tagline", "context": "title screen", "prompt": "<quiet wisdom> A round of golf is not played on the course. It is played in your mind." },
+      { "id": "n_parking_lot", "context": "intro", "prompt": "<setting the scene, unhurried> You are standing in the parking lot at Pebble Beach. The Pacific stretches to the horizon. The air smells like salt and freshly cut grass." },
+      { "id": "n_hole_1_intro", "context": "hole 1", "prompt": "<building atmosphere> The morning mist hasn't quite burned off yet. You stand on the first tee of Pebble Beach, the most famous opening hole in American golf." },
+      { "id": "n_hole_5_intro", "context": "hole 5", "prompt": "<awe, slight tension> The fifth at Pebble Beach. 188 yards, but every one of those yards is over a chasm." },
+      { "id": "n_hole_7_intro", "context": "hole 7", "prompt": "<reverence> One hundred and six yards. The shortest hole at Pebble Beach, and arguably the most photographed hole in golf." },
+      { "id": "n_hole_8_intro", "context": "hole 8", "prompt": "<gravity> Eight at Pebble Beach. This is the one. The signature hole." },
+      { "id": "n_round_end", "context": "round summary", "prompt": "<reflective, warm> The front nine at Pebble Beach is behind you. The ocean doesn't care what you shot. The cypress trees have seen worse." }
+    ],
+
+    "transitions": [
+      { "id": "n_walk_1_2", "context": "walking holes 1-2", "prompt": "<calm transition> You and Dave walk off the first green toward the second tee. The mist is lifting." },
+      { "id": "n_walk_ocean", "context": "first ocean view", "prompt": "<wonder> Walking to the third tee, you catch your first real glimpse of the ocean through the pines." },
+      { "id": "n_walk_8", "context": "walking to 8", "prompt": "<heavy anticipation> The walk to eight is short and heavy with anticipation. This is the hole you see on television." },
+      { "id": "n_walk_9_end", "context": "after hole 8", "prompt": "<wind down> Eight is behind you. The chasm is behind you. Whatever the scorecard says, you hit a shot over the Pacific Ocean." }
+    ],
+
+    "ambient": [
+      { "id": "n_ocean_crash", "context": "ocean sounds", "prompt": "<gentle> The waves break against the rocks below." },
+      { "id": "n_wind", "context": "wind", "prompt": "<observational> The wind shifts." },
+      { "id": "n_silence", "context": "quiet moment", "prompt": "<whisper> Silence. Just the ocean and the grass." }
+    ]
+  },
+
+  "inner_voice": {
+    "swing_thoughts": [
+      { "id": "iv_backswing", "context": "generic swing start", "prompt": "<internal, rising tension> You begin your backswing. Your mind starts to wander..." },
+      { "id": "iv_uninvited", "context": "intrusive thought", "prompt": "<anxious> At the top of your backswing, a thought arrives uninvited..." },
+      { "id": "iv_waitress", "context": "distraction", "prompt": "<dreamy, drifting> That waitress at the turn had incredible eyes. What was her name? Something with a K..." },
+      { "id": "iv_dont_go_left", "context": "the jinx", "prompt": "<panicking, getting faster> Don't go left. Don't go left. Don't go left. DON'T go left." },
+      { "id": "iv_yips", "context": "putting anxiety", "prompt": "<shaky> You notice your hands are shaking. Are they shaking? Look at them. They're shaking." },
+      { "id": "iv_etiquette", "context": "overthinking", "prompt": "<spiraling> What's the etiquette here — do I mark this? Is Dave expecting me to mark? He's standing on my line." },
+      { "id": "iv_boss", "context": "intrusive work thought", "prompt": "<tense> Your boss is playing behind you. He mentioned this morning he's restructuring the department. Don't think about it." },
+      { "id": "iv_otter", "context": "nature distraction", "prompt": "<enchanted, slowing down> You make eye contact with a sea otter floating in the cove below. It's on its back, eating a clam. Living its best life." },
+      { "id": "iv_send_it", "context": "aggressive", "prompt": "<hyped, reckless> Hit it as hard as you possibly can. This is Pebble Beach. You might never be back. Grip it and rip it." },
+      { "id": "iv_vertigo", "context": "hole 5 fear", "prompt": "<dizzy, unsteady> I wonder how deep that water is. Like, if I jumped. Not in a dark way. Just... it's really far down, right?" },
+      { "id": "iv_catastrophize", "context": "hole 8 fear", "prompt": "<spiraling> What happens if I don't clear it? Like, actually? Is that ball gone forever?" },
+      { "id": "iv_mindfulness", "context": "centering", "prompt": "<slow, deliberate breathing> Inhale. Exhale. Feel your feet on the ground. This is just another shot." }
+    ],
+
+    "perk_unlocks": [
+      { "id": "iv_perk_focus", "context": "focus perk", "prompt": "<clarity> Something clicks. Your mind feels... sharper." },
+      { "id": "iv_perk_swagger", "context": "swagger perk", "prompt": "<confident> You feel it. That energy. You belong here." },
+      { "id": "iv_perk_humor", "context": "humor perk", "prompt": "<amused> You realize you're actually having fun. Like, genuinely." },
+      { "id": "iv_perk_knowledge", "context": "knowledge perk", "prompt": "<analytical, satisfied> The course makes sense now. You can see the architect's intent." },
+      { "id": "iv_perk_zen", "context": "zen perk", "prompt": "<serene, ocean sounds> Peace. Just... peace." }
+    ]
+  },
+
+  "announcer": {
+    "multiplayer": [
+      { "id": "a_player_joined", "context": "new player joins", "prompt": "<PA system> Now on the course: a new player has joined." },
+      { "id": "a_encounter", "context": "players meet", "prompt": "<PA system> Attention on the course. Players approaching." },
+      { "id": "a_clubhouse", "context": "clubhouse entry", "prompt": "<PA system> Welcome to the clubhouse." },
+      { "id": "a_tee_time", "context": "round starting", "prompt": "<PA system> Your tee time is now. Please proceed to the first tee." }
+    ]
+  }
+}
