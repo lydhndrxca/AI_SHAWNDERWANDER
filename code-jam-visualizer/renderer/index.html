@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODE JAM</title>
+  <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="scanlines"></div>
+  <div class="menu-container">
+    <h1 class="title">CODE JAM</h1>
+    <p class="subtitle">FUNKIFIER</p>
+
+    <div id="drop-zone" class="drop-zone">
+      <input type="file" id="file-input" accept="audio/*" hidden>
+      <p class="drop-text">DROP AUDIO FILE HERE</p>
+      <p class="drop-hint">or click to browse</p>
+    </div>
+
+    <div id="analysis-info" class="analysis-info hidden">
+      <div class="info-row">
+        <span class="info-label">KEY</span>
+        <span class="info-value" id="info-key">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">BPM</span>
+        <span class="info-value" id="info-bpm">—</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">STATUS</span>
+        <span class="info-value" id="info-status">READY</span>
+      </div>
+    </div>
+
+    <div id="loading-indicator" class="loading hidden">
+      <div class="loading-bar"><div class="loading-fill"></div></div>
+      <p class="loading-text">ANALYZING...</p>
+    </div>
+
+    <button class="btn" id="btn-play">PLAY</button>
+    <button class="btn btn-secondary" id="btn-default">PLAY DEFAULT</button>
+    <button class="btn btn-quit" id="btn-quit">QUIT</button>
+  </div>
+  <script src="menu.js"></script>
+</body>
+</html>

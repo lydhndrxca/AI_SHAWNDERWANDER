@@ -1,0 +1,16 @@
+{
+  "name": "code-jam-visualizer",
+  "version": "1.0.0",
+  "description": "Funky chiptune audio visualizer screensaver — Code Jam theme",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "three": "^0.172.0",
+    "tone": "^15.1.5"
+  },
+  "devDependencies": {
+    "electron": "^35.1.2"
+  }
+}

@@ -1,0 +1,22 @@
+---
+description: Core context for AI_SHAWNDERWANDER — hardware, repo philosophy, and working conventions
+alwaysApply: true
+---
+
+# Repo Context
+
+This is an **ideas farm** repo. Multiple unrelated projects live here as top-level folders. See `MASTER.md` for the full context document.
+
+## Key facts
+
+- **Hardware**: i9-14900F (24c/32t), RTX 5090 32GB, 96GB DDR5, 4TB NVMe. Never constrained by compute.
+- **AI tokens**: Near-unlimited budget on top-tier models. Treat agent coding as a commodity — the bottleneck is ideation, not execution.
+- **Working style**: Flow-state prototyping. Ideas get built immediately, no ceremony.
+
+## Conventions
+
+- Each distinct project gets its own **top-level folder** with its own README and dependencies.
+- If a conversation shifts to what sounds like a **new, unrelated project**, ask: "This sounds like its own project — should I create a new folder for it?"
+- Bias toward action. Ask only when the answer materially changes what gets built.
+- Don't pre-create shared infrastructure. Let it emerge naturally.
+- Suggestions can be ambitious — this machine and token budget can handle it.
