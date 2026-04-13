@@ -156,23 +156,44 @@ async function showPuttSetup(hole) {
 
 async function showSwingThought(shotType, hole) {
   UI.clearChoices();
+
+  // Brief narrative lead-in from the scenario pool
   const scenario = getScenario(shotType, hole.number);
   await UI.typeText(scenario.setup, 'thought', 22);
-  await sleep(400);
+  await sleep(300);
 
-  UI.showChoices(scenario.choices, async (choice) => {
-    state.lastChoice = choice;
-    const quality = resolveShot(choice, state, shotType);
+  // The backswing begins — fleeting micro-thoughts flash
+  const thoughts = getMicroThoughts(shotType, 5);
+  const timerMs = 2200;
+
+  UI.showMicroThoughts(thoughts, timerMs, async (thought, wasTimeout) => {
+    // Show what flashed through the mind
+    if (wasTimeout) {
+      await UI.typeText(`Your mind wandered: "${thought.text}"`, 'action', 15);
+    } else {
+      await UI.typeText(`"${thought.text}"`, 'action', 15);
+    }
+    await sleep(200);
+
+    // Resolve shot using the micro-thought system
+    const quality = resolveMicroShot(thought, state, shotType);
     state.lastShotQuality = quality;
     state.strokesThisHole++;
-    state.shotsThisHole.push({ type: shotType, quality, choice });
 
-    applyTraitEffects(state, choice.traitEffects);
-    if (choice.partnerEffect) {
-      applyTraitEffects(state, choice.partnerEffect);
-    }
+    // Build a compatible choice object for the result phase
+    const choiceProxy = {
+      label: thought.text,
+      text: thought.text,
+      baseQualityIndex: 2 + thought.quality,
+      traitEffects: thought.traitEffects || {},
+      resultNarrative: buildMicroResultNarrative(thought, quality, shotType),
+    };
+    state.lastChoice = choiceProxy;
+    state.shotsThisHole.push({ type: shotType, quality, choice: choiceProxy });
 
-    // Showmanship: great shots boost swagger
+    applyTraitEffects(state, thought.traitEffects || {});
+
+    // Showmanship perk
     if (['perfect', 'great'].includes(quality) && getPerkEffect(state, 'greatShotSwaggerBoost')) {
       const boost = getPerkEffect(state, 'greatShotSwaggerBoost').value;
       state.traits.swagger = Math.min(100, state.traits.swagger + boost);
@@ -180,7 +201,6 @@ async function showSwingThought(shotType, hole) {
 
     UI.updateTraits(state);
 
-    // Check for perk unlocks and handle before advancing
     if (state.pendingPerkUnlocks.length > 0) {
       await handlePerkUnlocks();
     }
@@ -188,6 +208,38 @@ async function showSwingThought(shotType, hole) {
     advancePhase(state);
     runPhase();
   });
+}
+
+function buildMicroResultNarrative(thought, quality, shotType) {
+  const isGood = ['perfect', 'great', 'good'].includes(quality);
+  const narratives = {
+    focus: {
+      good: shotType === 'putt'
+        ? 'Your mind was quiet. The stroke is smooth, the ball tracks the line you picked.'
+        : 'You stayed locked in. The ball launches off the face exactly where you aimed.',
+      bad: 'You were focused, but the body didn\'t follow. The contact is thin, the flight wrong.',
+    },
+    distraction: {
+      good: 'Despite the wandering mind, your hands remembered what to do. Lucky.',
+      bad: shotType === 'putt'
+        ? 'Your mind was elsewhere. The putter head wobbles, the ball dies short and off-line.'
+        : 'You weren\'t there. Not really. The club sails through on autopilot, and autopilot isn\'t great.',
+    },
+    swagger: {
+      good: 'You wanted to crush it. And you did. The ball rips through the air with authority.',
+      bad: 'Ambition exceeded ability. You swung out of your shoes and paid for it.',
+    },
+    anxiety: {
+      good: 'The fear was there, but it sharpened you. Careful, controlled, solid.',
+      bad: 'The thought became a prophecy. You flinched mid-swing and the result was exactly what you feared.',
+    },
+    neutral: {
+      good: 'No drama, no heroics. Just a clean strike. Sometimes that\'s all it takes.',
+      bad: 'Nothing special in, nothing special out. The contact is mushy, the result mediocre.',
+    },
+  };
+  const cat = narratives[thought.category] || narratives.neutral;
+  return { good: cat.good, bad: cat.bad };
 }
 
 async function showShotResult(shotType, hole) {

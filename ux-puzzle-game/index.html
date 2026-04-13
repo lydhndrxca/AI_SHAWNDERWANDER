@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXEL PERFECT — UX Design Puzzle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Title Screen -->
+    <div id="title-screen" class="screen active">
+      <div class="title-logo">
+        <div class="title-pixel">■</div>
+        <h1>PIXEL PERFECT</h1>
+        <p class="title-sub">A UX Design Puzzle Game</p>
+      </div>
+      <div class="title-tagline">Drag. Snap. Satisfy the client.</div>
+      <button class="btn-start" id="btn-start">START PROJECT</button>
+      <div class="title-hint">You are a UX designer. Clients send you briefs.<br>Build their apps. Don't mess it up.</div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <span class="topbar-level" id="topbar-level">PROJECT 1</span>
+          <span class="topbar-client" id="topbar-client">Client: TechStartup Inc.</span>
+        </div>
+        <div class="topbar-right">
+          <button class="btn-small" id="btn-brief">📋 BRIEF</button>
+          <button class="btn-small" id="btn-check">✓ SUBMIT</button>
+          <button class="btn-small btn-danger" id="btn-clear">✕ CLEAR</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <!-- Left: Component Palette -->
+        <div class="palette" id="palette">
+          <div class="palette-title">COMPONENTS</div>
+          <div class="palette-list" id="palette-list"></div>
+        </div>
+
+        <!-- Center: Grid Canvas -->
+        <div class="canvas-wrap">
+          <div class="canvas-header" id="canvas-header">Login Screen — 375×812</div>
+          <div class="canvas-frame" id="canvas-frame">
+            <div class="canvas-grid" id="canvas-grid"></div>
+          </div>
+        </div>
+
+        <!-- Right: Brief / Requirements -->
+        <div class="brief-panel" id="brief-panel">
+          <div class="brief-title">CLIENT BRIEF</div>
+          <div class="brief-body" id="brief-body"></div>
+        </div>
+      </div>
+
+      <!-- Bottom status -->
+      <div class="statusbar">
+        <span id="status-placed">0 / 0 placed</span>
+        <span id="status-hint"></span>
+        <span id="status-score"></span>
+      </div>
+    </div>
+
+    <!-- Grade Screen -->
+    <div id="grade-screen" class="screen">
+      <div class="grade-card" id="grade-card">
+        <div class="grade-title">CLIENT REVIEW</div>
+        <div class="grade-letter" id="grade-letter">A</div>
+        <div class="grade-stars" id="grade-stars">★★★★★</div>
+        <div class="grade-feedback" id="grade-feedback"></div>
+        <div class="grade-breakdown" id="grade-breakdown"></div>
+        <button class="btn-start" id="btn-next">NEXT PROJECT →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="levels.js"></script>
+  <script src="scoring.js"></script>
+  <script src="physics.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORM MAN — Earth's Least Mighty Hero</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ─── Title Card ─── -->
+    <header id="title-bar">
+      <div class="title-left">
+        <span class="title-name">WORM MAN</span>
+        <span class="title-sub">EARTH'S LEAST MIGHTY HERO</span>
+      </div>
+      <div class="title-right">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">STANDBY</span>
+      </div>
+    </header>
+
+    <!-- ─── Main Stage ─── -->
+    <div id="stage">
+      <div id="portrait-frame">
+        <canvas id="character-canvas"></canvas>
+        <audio id="response-audio" style="display:none"></audio>
+        <div id="vhs-overlay">
+          <span class="vhs-rec">● REC</span>
+          <span class="vhs-time" id="vhs-time">00:00:00</span>
+        </div>
+      </div>
+
+      <!-- ─── Reply Text ─── -->
+      <div id="reply-bubble" style="display:none">
+        <div id="reply-name">WORM MAN</div>
+        <div id="reply-text"></div>
+        <div id="reply-timing"></div>
+      </div>
+    </div>
+
+    <!-- ─── Chat Log ─── -->
+    <div id="chat-log"></div>
+
+    <!-- ─── Input Bar ─── -->
+    <div id="input-bar">
+      <button id="btn-mic" title="Click to record, click again to send">
+        <span class="mic-icon">&#127908;</span>
+        <span class="mic-label" id="mic-label">CLICK TO TALK</span>
+      </button>
+      <input type="text" id="text-input" placeholder="Say something to Worm Man..." autocomplete="off">
+      <button id="btn-send" title="Send">SEND</button>
+      <button id="btn-reset" title="Wipe memory">&#129504;</button>
+    </div>
+
+    <!-- ─── Splash ─── -->
+    <div id="splash">
+      <div class="splash-inner">
+        <div class="splash-title">YOU JUST GOT</div>
+        <div class="splash-hero">WORMED</div>
+        <div class="splash-sub">Press any key or click to begin</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/audio-sync.js"></script>
+  <script src="/character-renderer.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

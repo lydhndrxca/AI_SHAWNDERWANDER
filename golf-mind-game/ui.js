@@ -147,6 +147,86 @@ const UI = {
     main.scrollTop = main.scrollHeight;
   },
 
+  // ─── Micro-Thought Mini-Game ───
+  // Timed fleeting thoughts during the backswing. Pick one in ~2s or it randomizes.
+  showMicroThoughts(thoughts, timeMs, onSelect) {
+    this.choicesEl.innerHTML = '';
+    this.actionEl.innerHTML = '';
+    let resolved = false;
+
+    // Backswing narrative
+    const label = document.createElement('div');
+    label.className = 'micro-label';
+    label.textContent = 'BACKSWING — WHAT FLASHES THROUGH YOUR MIND?';
+    this.choicesEl.appendChild(label);
+
+    // Timer bar
+    const timerWrap = document.createElement('div');
+    timerWrap.className = 'micro-timer-wrap';
+    const timerBar = document.createElement('div');
+    timerBar.className = 'micro-timer-bar';
+    timerBar.style.animationDuration = timeMs + 'ms';
+    timerWrap.appendChild(timerBar);
+    this.choicesEl.appendChild(timerWrap);
+
+    // Thought buttons — appear staggered
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'micro-thoughts-grid';
+
+    thoughts.forEach((thought, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'micro-btn';
+      btn.textContent = thought.text;
+
+      // Category color hint
+      const catColors = { focus: 'micro-focus', distraction: 'micro-distract', swagger: 'micro-swagger', anxiety: 'micro-anxiety', neutral: 'micro-neutral' };
+      btn.classList.add(catColors[thought.category] || 'micro-neutral');
+
+      // Stagger appearance
+      btn.style.animationDelay = (100 + idx * 120) + 'ms';
+
+      btn.addEventListener('click', () => {
+        if (resolved) return;
+        resolved = true;
+        this._resolveMicroPick(btnContainer, btn, thought, onSelect);
+      });
+
+      btnContainer.appendChild(btn);
+    });
+
+    this.choicesEl.appendChild(btnContainer);
+
+    // Auto-resolve on timeout
+    setTimeout(() => {
+      if (resolved) return;
+      resolved = true;
+      const randomIdx = Math.floor(Math.random() * thoughts.length);
+      const randomThought = thoughts[randomIdx];
+      const randomBtn = btnContainer.children[randomIdx];
+      this._resolveMicroPick(btnContainer, randomBtn, randomThought, onSelect, true);
+    }, timeMs);
+
+    const main = document.querySelector('main');
+    main.scrollTop = main.scrollHeight;
+  },
+
+  _resolveMicroPick(container, chosenBtn, thought, onSelect, wasTimeout = false) {
+    // Flash the chosen one, fade others
+    container.querySelectorAll('.micro-btn').forEach(b => {
+      b.disabled = true;
+      if (b !== chosenBtn) {
+        b.classList.add('micro-faded');
+      }
+    });
+    chosenBtn.classList.add('micro-chosen');
+    if (wasTimeout) chosenBtn.classList.add('micro-random');
+
+    // Brief pause for the "impact" feel
+    setTimeout(() => {
+      onSelect(thought, wasTimeout);
+    }, 400);
+  },
+
   _buildEffectHints(response) {
     const parts = [];
     if (response.traitEffects) {
@@ -254,21 +334,81 @@ const UI = {
 
   updateScorecard(state) {
     this.scorecardEl.innerHTML = '';
-    for (let i = 0; i < COURSE_DATA.holes.length; i++) {
-      const div = document.createElement('div');
-      div.className = 'sc-hole';
-      if (i === state.currentHole) {
-        div.classList.add('current');
-        div.textContent = COURSE_DATA.holes[i].number;
-      } else if (state.scorecard[i] !== null) {
-        const result = formatHoleScore(state.scorecard[i], COURSE_DATA.holes[i].par);
-        div.textContent = result.text;
-        div.classList.add(result.class);
-      } else {
-        div.textContent = COURSE_DATA.holes[i].number;
-      }
-      this.scorecardEl.appendChild(div);
+    const holes = COURSE_DATA.holes;
+    const grid = document.createElement('div');
+    grid.className = 'sc-table';
+
+    // Row 1: HOLE headers
+    grid.appendChild(this._scCell('HOLE', 'sc-header'));
+    for (let i = 0; i < holes.length; i++) {
+      const cls = i === state.currentHole ? 'sc-header sc-current' : 'sc-header';
+      grid.appendChild(this._scCell(holes[i].number, cls));
     }
+    grid.appendChild(this._scCell('TOT', 'sc-header'));
+
+    // Row 2: PAR values
+    grid.appendChild(this._scCell('PAR', 'sc-header'));
+    let totalPar = 0;
+    for (let i = 0; i < holes.length; i++) {
+      totalPar += holes[i].par;
+      grid.appendChild(this._scCell(holes[i].par, 'sc-par'));
+    }
+    grid.appendChild(this._scCell(totalPar, 'sc-total'));
+
+    // Row 3: Player scores
+    grid.appendChild(this._scCell('YOU', 'sc-header'));
+    let totalStrokes = 0;
+    let holesPlayed = 0;
+    for (let i = 0; i < holes.length; i++) {
+      const score = state.scorecard[i];
+      if (i === state.currentHole && score === null) {
+        grid.appendChild(this._scCell('●', 'sc-current'));
+      } else if (score !== null) {
+        totalStrokes += score;
+        holesPlayed++;
+        const diff = score - holes[i].par;
+        let cls = 'sc-par';
+        let display = score;
+        if (diff <= -2) cls = 'sc-eagle';
+        else if (diff === -1) cls = 'sc-birdie';
+        else if (diff === 0) cls = 'sc-par';
+        else if (diff === 1) cls = 'sc-bogey';
+        else cls = 'sc-double';
+        grid.appendChild(this._scCell(display, cls));
+      } else {
+        grid.appendChild(this._scCell('–', ''));
+      }
+    }
+    const totalDisp = holesPlayed > 0 ? totalStrokes : '–';
+    grid.appendChild(this._scCell(totalDisp, 'sc-total'));
+
+    // Row 4: +/- par
+    grid.appendChild(this._scCell('+/–', 'sc-header'));
+    let runningDiff = 0;
+    for (let i = 0; i < holes.length; i++) {
+      const score = state.scorecard[i];
+      if (score !== null) {
+        const diff = score - holes[i].par;
+        runningDiff += diff;
+        let cls = diff < 0 ? 'sc-birdie' : diff > 0 ? 'sc-bogey' : 'sc-par';
+        grid.appendChild(this._scCell(diff === 0 ? 'E' : (diff > 0 ? '+' + diff : diff), cls));
+      } else if (i === state.currentHole) {
+        grid.appendChild(this._scCell('●', 'sc-current'));
+      } else {
+        grid.appendChild(this._scCell('', ''));
+      }
+    }
+    const totalDiff = holesPlayed > 0 ? (runningDiff === 0 ? 'E' : (runningDiff > 0 ? '+' + runningDiff : runningDiff)) : '–';
+    grid.appendChild(this._scCell(totalDiff, 'sc-total'));
+
+    this.scorecardEl.appendChild(grid);
+  },
+
+  _scCell(content, extraClass) {
+    const cell = document.createElement('div');
+    cell.className = 'sc-cell' + (extraClass ? ' ' + extraClass : '');
+    cell.textContent = content;
+    return cell;
   },
 
   // ─── Character Sheet ───

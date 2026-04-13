@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+websockets
+httpx
+kokoro-onnx
+soundfile
+faster-whisper
+SpeechRecognition
+PyAudio
+numpy
+imageio-ffmpeg
+Pillow

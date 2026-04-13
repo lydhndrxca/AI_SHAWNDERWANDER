@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Golf — Story Engine</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+
+  <!-- W95 Title Bar -->
+  <div class="titlebar">
+    <span class="titlebar-icon">⛳</span>
+    <span class="titlebar-text">Corporate Golf — Story Engine</span>
+    <div class="titlebar-btns">
+      <button class="tb-btn" title="Save" id="btn-save">💾</button>
+      <button class="tb-btn" title="Export to JS" id="btn-export">📤</button>
+      <button class="tb-btn" title="Import JSON" id="btn-import">📥</button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <button class="tool-btn" id="btn-add-hole" title="Add Hole">+ Hole</button>
+    <button class="tool-btn" id="btn-add-npc" title="Add NPC">+ NPC</button>
+    <button class="tool-btn" id="btn-add-flag" title="Add Flag">+ Flag</button>
+    <span class="toolbar-sep"></span>
+    <button class="tool-btn" id="btn-view-map" title="Story Map">🗺 Map</button>
+    <button class="tool-btn active" id="btn-view-tree" title="Tree View">🌲 Tree</button>
+    <button class="tool-btn" id="btn-view-npcs" title="NPC Panel">👤 NPCs</button>
+    <button class="tool-btn" id="btn-view-flags" title="Flag Tracker">🚩 Flags</button>
+    <span class="toolbar-sep"></span>
+    <button class="tool-btn ai-btn" id="btn-ai-settings" title="AI Settings">🤖 AI Config</button>
+    <span class="toolbar-spacer"></span>
+    <span class="toolbar-status" id="toolbar-status">Ready</span>
+  </div>
+
+  <!-- Main Layout: 3 panels -->
+  <div class="panels">
+
+    <!-- LEFT: Story Tree -->
+    <div class="panel panel-left" id="panel-left">
+      <div class="panel-header">
+        <span>STORY STRUCTURE</span>
+        <button class="panel-collapse" data-target="panel-left">◂</button>
+      </div>
+      <div class="panel-search">
+        <input type="text" id="tree-search" placeholder="Search nodes..." class="w95-input" />
+      </div>
+      <div class="panel-body" id="story-tree"></div>
+    </div>
+
+    <!-- CENTER: Editor Area -->
+    <div class="panel panel-center" id="panel-center">
+      <!-- Dynamic content rendered here -->
+      <div id="editor-area">
+        <div class="editor-empty" id="editor-empty">
+          <div class="editor-empty-icon">⛳</div>
+          <div class="editor-empty-title">Corporate Golf Story Engine</div>
+          <div class="editor-empty-sub">Select a node from the tree, or switch to Map view to see the full story.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Context Panel -->
+    <div class="panel panel-right" id="panel-right">
+      <div class="panel-header">
+        <span>CONTEXT</span>
+        <button class="panel-collapse" data-target="panel-right">▸</button>
+      </div>
+      <div class="panel-body" id="context-panel">
+        <div class="ctx-section" id="ctx-node-info">
+          <div class="ctx-title">NODE INFO</div>
+          <div class="ctx-body" id="ctx-node-body">Select a node to view details.</div>
+        </div>
+        <div class="ctx-section" id="ctx-connections">
+          <div class="ctx-title">CONNECTIONS</div>
+          <div class="ctx-body" id="ctx-connections-body">—</div>
+        </div>
+        <div class="ctx-section" id="ctx-flags">
+          <div class="ctx-title">FLAGS USED</div>
+          <div class="ctx-body" id="ctx-flags-body">—</div>
+        </div>
+        <div class="ctx-section" id="ctx-stats">
+          <div class="ctx-title">STAT EFFECTS</div>
+          <div class="ctx-body" id="ctx-stats-body">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Assist Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal w95-window" id="modal">
+      <div class="modal-titlebar">
+        <span id="modal-title">Modal</span>
+        <button class="tb-btn modal-close" id="modal-close">✕</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="file-import" accept=".json" style="display:none" />
+
+  <script src="sample-data.js"></script>
+  <script src="editor.js"></script>
+  <script src="ai-assist.js"></script>
+</body>
+</html>

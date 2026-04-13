@@ -1,0 +1,9 @@
+imtalker/
+output/
+server/.venv/
+server/__pycache__/
+server/*.onnx
+server/*.bin
+*.pyc
+*.wav
+*.mp4

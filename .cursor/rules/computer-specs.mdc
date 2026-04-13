@@ -1,0 +1,46 @@
+---
+description: Shawn's workstation hardware specs and GPU capabilities — always in context
+alwaysApply: true
+---
+
+# Shawn's Computer Specs
+
+**Machine**: MSI Aegis R2 Desktop
+
+## Hardware
+- **CPU**: Intel Core i9-14900F — 24 cores / 32 threads (8P + 16E), boost to 5.8 GHz
+- **GPU**: NVIDIA GeForce RTX 5090 — 32 GB GDDR7, 21,760 CUDA cores, 680 Tensor Cores (5th gen), 104.8 TFLOPS FP32, CUDA 13.2, Driver 595.79
+- **RAM**: 96 GB DDR5-4800 (2 x 48 GB Kingston)
+- **Storage**: 4 TB Kingston NVMe SSD (~2.9 TB free)
+- **Motherboard**: MSI PRO B760-VC WIFI 7 BULK
+- **Network**: 2.5GbE Ethernet, Wi-Fi 7, Tailscale VPN
+
+## Software
+- Windows 11 Pro (Build 26200)
+- Python 3.12, Node.js 22, Git 2.53, Ollama 0.19
+- CUDA Toolkit (nvcc) NOT installed — driver-level CUDA 13.2 only
+- No Docker, no Conda
+
+## GPU Capabilities
+- Local LLM inference: up to 70B Q4 (~20 tok/s), 32B Q6 full speed, 8B at 145 tok/s
+- LoRA fine-tuning: up to ~20B parameters
+- Image gen: FLUX.1 in ~5s (BF16), ~1.5s in FP4 via Nunchaku/SVDQuant
+- Video gen: real-time 16 FPS diffusion
+- Blackwell-exclusive: native FP4 Tensor Core acceleration (3x faster, 4x smaller, BF16 quality)
+- Concurrent: can run 4-6 AI services simultaneously (~20 GB typical, 12 GB headroom)
+- 575W TDP — PSU headroom matters for sustained loads
+
+## Ollama (Running)
+- CRITICAL: Set OLLAMA_NUM_CTX=4096 — default 128K context silently eats 65 GB VRAM
+- Use Q4_K_M quantization for concurrent model loading
+- Recommended concurrent: 14B LLM (11 GB) + FLUX (8-12 GB) + TTS (1 GB) = ~22 GB
+
+## When This Matters
+- When suggesting ML models, check they fit in 32 GB VRAM
+- When recommending tools, prefer GPU-accelerated options
+- CUDA Toolkit isn't installed yet — note this if training/compiling CUDA extensions is needed
+- Docker isn't installed — suggest pip/npm alternatives or note when Docker is required
+- For image gen, suggest FP4/Nunchaku when speed matters (Blackwell-only feature)
+
+Full specs: `creative-hub/COMPUTER-SPECS.md`
+Full project list: `creative-hub/RTX-5090-PROJECTS.md`
