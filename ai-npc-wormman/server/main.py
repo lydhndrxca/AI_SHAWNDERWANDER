@@ -74,6 +74,18 @@ async def reset():
     return {"status": "Memory wiped. Worm Man has forgotten everything. Again."}
 
 
+@app.get("/api/model")
+async def get_model():
+    return {"model": npc_brain.get_model(), "size": npc_brain.get_model_size(), "available": list(npc_brain.MODELS.keys())}
+
+
+@app.post("/api/model")
+async def set_model(body: dict):
+    size = body.get("size", "")
+    actual = npc_brain.set_model_size(size)
+    return {"model": npc_brain.get_model(), "size": actual}
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     """WebSocket for real-time chat. Text or audio in, audio URL + text out."""

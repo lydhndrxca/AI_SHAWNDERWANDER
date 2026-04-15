@@ -1,16 +1,38 @@
-"""Worm Man's brain — Ollama LLM integration with character personality and memory."""
+"""Worm Man's brain — Ollama LLM integration with abliterated models and memory."""
 
 import json
 import httpx
 from pathlib import Path
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "qwen2.5:14b"
-FALLBACK_MODEL = "qwen2.5:7b"
+
+# Abliterated models with character baked into Modelfile — no censorship
+MODELS = {
+    "14b": "wormman:14b",
+    "32b": "wormman:32b",
+}
+DEFAULT_SIZE = "14b"
 MAX_MEMORY = 20
 
+_active_size: str = DEFAULT_SIZE
 _character = None
 _history: list[dict] = []
+
+
+def get_model() -> str:
+    return MODELS[_active_size]
+
+
+def get_model_size() -> str:
+    return _active_size
+
+
+def set_model_size(size: str) -> str:
+    global _active_size
+    size = size.strip().lower()
+    if size in MODELS:
+        _active_size = size
+    return _active_size
 
 
 def _load_character() -> dict:
@@ -22,37 +44,7 @@ def _load_character() -> dict:
     return _character
 
 
-def _build_system_prompt() -> str:
-    c = _load_character()
-    quirks_block = "\n".join(f"- {q}" for q in c["quirks"])
-    samples_block = "\n".join(f'  "{line}"' for line in c.get("sample_lines", []))
-
-    return f"""You are {c['name']}, {c['tagline']}.
-
-PERSONALITY: {c['personality']}
-
-BACKSTORY: {c['backstory']}
-
-SPEECH STYLE: {c['speech_style']}
-
-QUIRKS:
-{quirks_block}
-
-SAMPLE LINES (match this tone):
-{samples_block}
-
-RULES:
-- Stay in character at ALL times. You ARE {c['name']}. Never break character.
-- Keep responses to 1-3 sentences. You're in a conversation, not writing an essay.
-- Be funny. You're a comedy character. Lean into the absurdity.
-- Occasionally drop your catchphrase or reference your quirks naturally.
-- If someone asks something you don't know, bullshit confidently — that's what {c['name']} would do.
-- Include *slurp* or similar wet sound effects occasionally in your text (you're a worm).
-- Never use emojis. You're an 80s action hero, not a teenager."""
-
-
 async def _check_model(client: httpx.AsyncClient, model: str) -> bool:
-    """Check if a model is available in Ollama."""
     try:
         resp = await client.get("http://localhost:11434/api/tags", timeout=5)
         if resp.status_code == 200:
@@ -61,6 +53,17 @@ async def _check_model(client: httpx.AsyncClient, model: str) -> bool:
     except Exception:
         pass
     return False
+
+
+async def _resolve_model(client: httpx.AsyncClient) -> str | None:
+    """Find the best available wormman model, preferring the active size."""
+    primary = MODELS[_active_size]
+    if await _check_model(client, primary):
+        return primary
+    for size, model in MODELS.items():
+        if size != _active_size and await _check_model(client, model):
+            return model
+    return None
 
 
 async def chat(user_message: str) -> str:
@@ -72,25 +75,23 @@ async def chat(user_message: str) -> str:
     if len(_history) > MAX_MEMORY * 2:
         _history = _history[-(MAX_MEMORY * 2):]
 
-    messages = [{"role": "system", "content": _build_system_prompt()}]
-    messages.extend(_history)
+    # wormman:* models have the system prompt baked into the Modelfile,
+    # so we only send conversation history — no system message override needed.
+    messages = list(_history)
 
     async with httpx.AsyncClient() as client:
-        model = MODEL
-        if not await _check_model(client, MODEL):
-            if await _check_model(client, FALLBACK_MODEL):
-                model = FALLBACK_MODEL
-            else:
-                return (
-                    f"*slurp* Listen, Worm Man's brain isn't connected right now. "
-                    f"Pull a model first: ollama pull {MODEL}"
-                )
+        model = await _resolve_model(client)
+        if model is None:
+            return (
+                "*slurp* Listen, Worm Man's brain isn't connected right now. "
+                "Create the model first: ollama create wormman:14b -f Modelfile.14b"
+            )
 
         try:
             resp = await client.post(
                 OLLAMA_URL,
                 json={"model": model, "messages": messages, "stream": False},
-                timeout=60,
+                timeout=120,
             )
             resp.raise_for_status()
             reply = resp.json()["message"]["content"]

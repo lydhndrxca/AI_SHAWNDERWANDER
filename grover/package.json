@@ -1,0 +1,13 @@
+{
+  "name": "wormman",
+  "version": "1.0.0",
+  "description": "Worm Man — Earth's Least Mighty Hero, docked to your taskbar",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}
