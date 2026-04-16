@@ -1,0 +1,496 @@
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --cream: #faf6ee;
+  --cream-dark: #f0ead8;
+  --ink: #3a3226;
+  --ink-light: #6b5e4f;
+  --ink-faint: #a89c8c;
+  --accent: #8b6f4e;
+  --accent-hover: #6d553a;
+  --link: #7a6650;
+  --link-hover: #5c4a36;
+  --page-max: 640px;
+  --tr: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+html, body {
+  height: 100%;
+  background: #f4efe4;
+  color: var(--ink);
+  font-family: 'Literata', 'Source Serif 4', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+
+.hidden { display: none !important; }
+
+.screen {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ═══════ LIBRARY ═══════ */
+
+#library {
+  background: var(--cream);
+  max-width: var(--page-max);
+  margin: 0 auto;
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+}
+
+.lib-header {
+  padding: 24px 28px 8px;
+  flex-shrink: 0;
+}
+
+.lib-title {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: var(--ink);
+}
+
+#lib-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 28px 40px;
+  scrollbar-width: none;
+}
+#lib-scroll::-webkit-scrollbar { display: none; }
+
+.testament-label {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 20px 0 6px;
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 14px 0 4px;
+}
+
+.book-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.book-row:active { color: var(--accent); }
+
+.book-row-name {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.book-row-ch {
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+/* ═══════ READER ═══════ */
+
+#reader-view { background: #f4efe4; }
+
+#reader {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--cream);
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+}
+
+#book-header {
+  padding: 16px 24px 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0; gap: 12px;
+}
+
+.header-left, .header-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+#btn-back {
+  font-family: inherit; font-size: 16px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 2px 6px;
+}
+#btn-back:hover { color: var(--accent); }
+
+#book-title {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+#chapter-title {
+  font-size: 12px; color: var(--ink-light);
+  text-align: center; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+#toc-btn {
+  font-size: 16px; background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 2px 6px;
+}
+#toc-btn:hover { color: var(--accent); }
+
+#depth-indicator { display: flex; gap: 5px; align-items: center; }
+
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-faint); opacity: 0.25;
+  transition: all var(--tr); cursor: pointer;
+}
+.dot.active { opacity: 1; background: var(--accent); transform: scale(1.3); }
+
+#page-area {
+  flex: 1; display: flex;
+  align-items: flex-start; justify-content: center;
+  padding: 20px 36px;
+  overflow-y: auto; scrollbar-width: none;
+}
+#page-area::-webkit-scrollbar { display: none; }
+
+#page-content {
+  max-width: 100%; width: 100%;
+  transition: opacity 0.25s ease;
+}
+
+/* depth 0 */
+.depth-0 {
+  text-align: center;
+  font-size: 19px; line-height: 1.9;
+  font-style: italic; padding: 60px 8px 40px;
+  cursor: pointer; transition: color 0.3s;
+  opacity: 0; animation: fadeUp 0.6s ease forwards;
+}
+.depth-0:hover { color: var(--accent); }
+.depth-0::after {
+  content: 'tap to read'; display: block;
+  font-style: normal; font-size: 10px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ink-faint); margin-top: 32px;
+  opacity: 0; animation: fadeSlow 1.2s ease 0.5s forwards;
+}
+
+/* depth 1 */
+.depth-label {
+  display: block; text-align: center;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 24px;
+  opacity: 0; animation: fadeSlow 0.8s ease 0.2s forwards;
+}
+
+.depth-1-full {
+  padding: 0 0 40px;
+  opacity: 0; animation: fadeUp 0.5s ease forwards;
+}
+
+.verse { margin-bottom: 14px; font-size: 16px; line-height: 1.8; }
+
+.verse-num {
+  font-size: 10px; font-weight: 600;
+  color: var(--accent); vertical-align: super;
+  margin-right: 3px; opacity: 0.6;
+}
+
+.verse-text { font-weight: 300; }
+
+.wiki-link {
+  color: var(--link); text-decoration: none;
+  border-bottom: 1px dotted rgba(122,102,80,0.3);
+  cursor: pointer; transition: all 0.2s;
+}
+.wiki-link:hover { color: var(--link-hover); border-bottom-color: var(--link-hover); }
+
+.loading {
+  text-align: center; padding: 60px 0;
+  font-size: 14px; color: var(--ink-faint);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.loading.error { color: #a87060; animation: none; }
+
+@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:.8} }
+
+/* footer */
+#page-footer {
+  padding: 8px 24px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+
+#page-footer button {
+  font-family: inherit; font-size: 26px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer;
+  padding: 4px 14px; transition: color 0.2s;
+}
+#page-footer button:hover:not(:disabled) { color: var(--accent); }
+#page-footer button:disabled { opacity: 0.15; cursor: default; }
+
+#page-num { font-size: 11px; color: var(--ink-faint); letter-spacing: 1px; }
+
+#progress-bar { height: 2px; background: var(--cream-dark); flex-shrink: 0; }
+#progress-fill {
+  height: 100%; background: var(--accent); opacity: 0.3;
+  transition: width var(--tr); width: 0;
+}
+
+/* ═══════ PANELS ═══════ */
+
+.panel {
+  position: fixed; top: 0; height: 100vh;
+  width: 360px; max-width: 88vw;
+  background: var(--cream);
+  z-index: 100; padding: 40px 28px;
+  overflow-y: auto; scrollbar-width: none;
+  transition: transform 0.35s cubic-bezier(0.25,0.1,0.25,1);
+}
+.panel::-webkit-scrollbar { display: none; }
+
+#toc-panel { left: 0; box-shadow: 4px 0 30px rgba(0,0,0,0.08); transform: translateX(-100%); }
+#toc-panel.visible { transform: translateX(0); }
+
+#wiki-panel { right: 0; box-shadow: -4px 0 30px rgba(0,0,0,0.08); transform: translateX(100%); }
+#wiki-panel.visible { transform: translateX(0); }
+
+.panel-close {
+  position: absolute; top: 12px; right: 16px;
+  font-size: 22px; background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 4px 8px;
+}
+.panel-close:hover { color: var(--ink); }
+
+.panel-heading {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 18px; font-weight: 600;
+  margin-bottom: 24px; letter-spacing: 1px;
+}
+
+#toc-list { list-style: none; }
+#toc-list li {
+  padding: 10px 8px; font-size: 14px;
+  color: var(--ink-light); cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  display: flex; align-items: baseline; gap: 12px;
+}
+#toc-list li:hover { color: var(--accent); }
+
+.toc-ch {
+  font-size: 11px; color: var(--ink-faint);
+  min-width: 24px; text-align: right; flex-shrink: 0;
+}
+
+#wiki-category {
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+}
+#wiki-title {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 22px; font-weight: 600;
+  margin-bottom: 18px; line-height: 1.3;
+}
+#wiki-body { font-size: 15px; line-height: 1.8; color: var(--ink-light); font-weight: 300; margin-bottom: 24px; }
+#wiki-refs { font-size: 12px; color: var(--ink-faint); line-height: 1.6; }
+#wiki-refs::before {
+  content: 'References'; display: block;
+  font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 6px; opacity: 0.6;
+}
+
+#overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.06); z-index: 90;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+#overlay.visible { opacity: 1; pointer-events: all; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeSlow { from{opacity:0} to{opacity:0.5} }
+
+/* ═══════ JESUS MODE TOGGLE ═══════ */
+
+.lib-header {
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.jesus-toggle {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  background: none; border: 1px solid var(--ink-faint);
+  color: var(--ink-faint); padding: 5px 14px;
+  border-radius: 20px; cursor: pointer;
+  transition: all 0.25s;
+}
+.jesus-toggle:hover {
+  color: #8b2020; border-color: #8b2020;
+}
+.jesus-toggle.active {
+  color: #fff; background: #8b2020; border-color: #8b2020;
+}
+
+/* ═══════ JESUS READER ═══════ */
+
+#jesus-view { background: #f4efe4; }
+
+#jesus-reader {
+  max-width: var(--page-max);
+  margin: 0 auto; height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--cream);
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+}
+
+#jesus-header {
+  padding: 16px 24px 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0; gap: 12px;
+}
+
+#jesus-header .header-left,
+#jesus-header .header-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+#jesus-btn-back, #jesus-toc-btn {
+  font-family: inherit; font-size: 16px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 2px 6px;
+}
+#jesus-btn-back:hover, #jesus-toc-btn:hover { color: #8b2020; }
+
+#jesus-section-name {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+#jesus-ref {
+  font-size: 12px; color: var(--ink-light);
+  text-align: center; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+#jesus-context {
+  padding: 0 36px;
+  font-size: 12px; line-height: 1.6;
+  color: var(--ink-faint); font-style: italic;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  padding-bottom: 12px;
+  opacity: 0; animation: fadeSlow 0.6s ease forwards;
+}
+
+#jesus-area {
+  flex: 1; display: flex;
+  align-items: flex-start; justify-content: center;
+  padding: 20px 36px;
+  overflow-y: auto; scrollbar-width: none;
+}
+#jesus-area::-webkit-scrollbar { display: none; }
+
+#jesus-content {
+  max-width: 100%; width: 100%;
+  transition: opacity 0.25s ease;
+}
+
+.jesus-verse { margin-bottom: 14px; font-size: 16px; line-height: 1.8; }
+
+.jesus-verse .verse-num {
+  font-size: 10px; font-weight: 600;
+  color: #8b2020; vertical-align: super;
+  margin-right: 3px; opacity: 0.6;
+}
+
+.jesus-verse .verse-text {
+  font-weight: 300;
+  color: #5a1515;
+}
+
+.jesus-verses-container {
+  padding: 0 0 40px;
+  opacity: 0; animation: fadeUp 0.5s ease forwards;
+}
+
+#jesus-footer {
+  padding: 8px 24px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+
+#jesus-footer button {
+  font-family: inherit; font-size: 26px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer;
+  padding: 4px 14px; transition: color 0.2s;
+}
+#jesus-footer button:hover:not(:disabled) { color: #8b2020; }
+#jesus-footer button:disabled { opacity: 0.15; cursor: default; }
+
+#jesus-num { font-size: 11px; color: var(--ink-faint); letter-spacing: 1px; }
+
+#jesus-progress { height: 2px; background: var(--cream-dark); flex-shrink: 0; }
+#jesus-progress-fill {
+  height: 100%; background: #8b2020; opacity: 0.3;
+  transition: width var(--tr); width: 0;
+}
+
+/* Jesus TOC */
+#jesus-toc-panel { left: 0; box-shadow: 4px 0 30px rgba(0,0,0,0.08); transform: translateX(-100%); }
+#jesus-toc-panel.visible { transform: translateX(0); }
+
+.jesus-toc-section {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #8b2020; padding: 16px 0 6px;
+}
+.jesus-toc-section:first-child { padding-top: 0; }
+
+.jesus-toc-item {
+  padding: 8px 8px; font-size: 13px;
+  color: var(--ink-light); cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: color 0.15s;
+}
+.jesus-toc-item:hover { color: #8b2020; }
+
+.jesus-toc-context {
+  display: block; font-size: 10px;
+  color: var(--ink-faint); font-style: italic;
+  margin-top: 2px;
+}
+
+@media(max-width:700px) {
+  #book-header{padding:12px 16px 6px}
+  #page-area{padding:16px 20px}
+  .depth-0{font-size:17px;padding:40px 4px 30px}
+  .verse{font-size:15px}
+  .panel{width:300px;padding:32px 20px}
+  .lib-header{padding:16px 20px 6px}
+  #lib-scroll{padding:8px 20px 40px}
+  #jesus-header{padding:12px 16px 6px}
+  #jesus-area{padding:16px 20px}
+  #jesus-context{padding:0 20px 10px}
+  .jesus-verse{font-size:15px}
+}

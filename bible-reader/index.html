@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#f4efe4">
+  <title>Bible Reader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;1,7..72,300;1,7..72,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Library -->
+  <div id="library" class="screen active">
+    <header class="lib-header">
+      <h1 class="lib-title">Bible Reader</h1>
+      <button id="btn-jesus-mode" class="jesus-toggle" aria-label="Words of Jesus mode">Words of Jesus</button>
+    </header>
+    <div id="lib-scroll"></div>
+  </div>
+
+  <!-- Jesus Words Reader -->
+  <div id="jesus-view" class="screen">
+    <div id="jesus-reader">
+      <header id="jesus-header">
+        <div class="header-left">
+          <button id="jesus-btn-back" aria-label="Back">&larr;</button>
+          <span id="jesus-section-name"></span>
+        </div>
+        <span id="jesus-ref"></span>
+        <div class="header-right">
+          <button id="jesus-toc-btn" aria-label="Sections">&#9776;</button>
+        </div>
+      </header>
+      <div id="jesus-context"></div>
+      <main id="jesus-area"><div id="jesus-content"></div></main>
+      <footer id="jesus-footer">
+        <button id="jesus-prev" disabled>&lsaquo;</button>
+        <span id="jesus-num"></span>
+        <button id="jesus-next">&rsaquo;</button>
+      </footer>
+      <div id="jesus-progress"><div id="jesus-progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Jesus TOC -->
+  <aside id="jesus-toc-panel" class="panel hidden">
+    <button class="panel-close" data-panel="jesus-toc">&times;</button>
+    <h2 class="panel-heading">Sections</h2>
+    <div id="jesus-toc-list"></div>
+  </aside>
+
+  <!-- Reader -->
+  <div id="reader-view" class="screen">
+    <div id="reader">
+      <header id="book-header">
+        <div class="header-left">
+          <button id="btn-back" aria-label="Back">&larr;</button>
+          <span id="book-title"></span>
+        </div>
+        <span id="chapter-title"></span>
+        <div class="header-right">
+          <button id="toc-btn" aria-label="Contents">&#9776;</button>
+          <span id="depth-indicator">
+            <span class="dot active" data-depth="0"></span>
+            <span class="dot" data-depth="1"></span>
+          </span>
+        </div>
+      </header>
+      <main id="page-area"><div id="page-content"></div></main>
+      <footer id="page-footer">
+        <button id="btn-prev" disabled>&lsaquo;</button>
+        <span id="page-num"></span>
+        <button id="btn-next">&rsaquo;</button>
+      </footer>
+      <div id="progress-bar"><div id="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <aside id="toc-panel" class="panel hidden">
+    <button class="panel-close" data-panel="toc">&times;</button>
+    <h2 class="panel-heading">Contents</h2>
+    <ol id="toc-list"></ol>
+  </aside>
+
+  <!-- Wiki -->
+  <aside id="wiki-panel" class="panel hidden">
+    <button class="panel-close" data-panel="wiki">&times;</button>
+    <div id="wiki-category"></div>
+    <h2 id="wiki-title"></h2>
+    <div id="wiki-body"></div>
+    <div id="wiki-refs"></div>
+  </aside>
+
+  <div id="overlay" class="hidden"></div>
+
+  <!-- Data files -->
+  <script src="jesus-words.js"></script>
+  <script src="registry.js"></script>
+  <script src="genesis.js"></script>
+  <script src="books-pentateuch.js"></script>
+  <script src="books-history-early.js"></script>
+  <script src="books-history-late.js"></script>
+  <script src="books-poetry.js"></script>
+  <script src="books-prophets.js"></script>
+  <script src="books-nt-narrative.js"></script>
+  <script src="books-epistles-rev.js"></script>
+  <script src="content.js"></script>
+  <script src="verse-cache.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
