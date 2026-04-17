@@ -53,7 +53,7 @@ function createGameState() {
       zen: 50,
     },
     partner: {
-      name: 'Dave',
+      name: 'Martin',
       impression: 50,
       mood: 'neutral',
       remarks: [],
@@ -70,6 +70,18 @@ function createGameState() {
     goodShotStreak: 0,
     legendSaveUsed: false,
     shotsTakenThisHole: 0,
+    // ─── Shot strategy ───
+    shotStrategy: null,
+    // ─── Story arc tracking ───
+    phoneEventsShown: [],
+    walkingMomentsShown: [],
+    storyEventsThisHole: [],
+    // ─── Panic system ───
+    panicAttackActive: false,
+    panicAttacksThisRound: 0,
+    panicCooldown: 0, // holes remaining before another can trigger
+    lastPanicType: null,
+    panicRecoveryScore: 0,
   };
 }
 
@@ -158,7 +170,7 @@ function getFlagValue(state, flag) {
 // ─── Dialogue Tree Engine ───
 // A dialogue tree is an array of nodes. Each node has:
 //   id:         unique string
-//   speaker:    'dave' | 'narrator' | 'thought' | 'you'
+//   speaker:    'martin' | 'sato' | 'claire' | 'narrator' | 'thought' | 'you'
 //   text:       string or function(state) => string
 //   responses:  array of response options (if absent, auto-advance to `next`)
 //   next:       id of the next node (for non-interactive nodes)
@@ -368,7 +380,7 @@ function resolveShot(choice, state, shotType) {
   const focusBonus = (state.traits.focus - 50) / 140;
   let zenBonus = (state.traits.zen - 50) / 200;
 
-  // Ocean Mind: double zen bonus
+  // Mountain Mind: double zen bonus
   if (getPerkEffect(state, 'zenBonusMultiplier')) {
     zenBonus *= getPerkEffect(state, 'zenBonusMultiplier').value;
   }
@@ -438,7 +450,7 @@ function resolveShot(choice, state, shotType) {
     }
   }
 
-  // Life of the Party: random Dave tip bonus
+  // Life of the Party: random Martin tip bonus
   if (getPerkEffect(state, 'daveTipBonus') && Math.random() < 0.5) {
     qualityIndex += getPerkEffect(state, 'daveTipBonus').value;
   }
@@ -566,6 +578,9 @@ function advancePhase(state) {
     state.strokesThisHole = 0;
     state.shotsThisHole = [];
     state.shotsTakenThisHole = 0;
+    state.shotStrategy = null;
+    state.storyEventsThisHole = [];
+    if (state.panicCooldown > 0) state.panicCooldown--;
     state.phase = PHASES.HOLE_INTRO;
     return;
   }

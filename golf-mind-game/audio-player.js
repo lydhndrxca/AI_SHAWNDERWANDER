@@ -96,7 +96,7 @@ const AudioPlayer = {
   // Play based on speaker type from dialogue system
   async playForSpeaker(speaker, lineId, category) {
     const voiceMap = {
-      dave: 'dave',
+      martin: 'martin',
       narrator: 'narrator',
       thought: 'inner_voice',
       you: 'inner_voice',

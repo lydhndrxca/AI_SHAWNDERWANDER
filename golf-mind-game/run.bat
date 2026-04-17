@@ -1,8 +1,8 @@
 @echo off
-title Corporate Golf
+title Corporate Golf — Fujo International
 echo ============================================
-echo   CORPORATE GOLF — Pebble Beach
-echo   Windows 95 Retro Golf Experience
+echo   CORPORATE GOLF — Fujo International
+echo   Terminal Dark Mode Edition
 echo ============================================
 echo.
 
@@ -32,6 +32,5 @@ echo ============================================
 echo.
 
 start "" http://localhost:3000
-start "" http://localhost:3000/editor/
 
 node index.js

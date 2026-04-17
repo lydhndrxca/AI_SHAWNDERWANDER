@@ -1,4 +1,4 @@
-// ─── Dialogue Trees ───
+﻿// â”€â”€â”€ Dialogue Trees â”€â”€â”€
 // Multi-turn branching dialogues for between-holes and special moments.
 // Every response directly affects traits, impression, shot modifiers, or narrative flags.
 
@@ -7,55 +7,57 @@ function memoryText(state, flagKey, ifSet, ifNotSet) {
   return hasFlag(state, flagKey) ? ifSet : ifNotSet;
 }
 
-// ─────────────────────────────────────────────
-// BETWEEN HOLES 1 → 2
-// ─────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// BETWEEN HOLES 1 â†’ 2
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DIALOGUE_AFTER_HOLE_1 = {
   id: 'after_h1',
   nodes: [
     {
       id: 'start',
       speaker: 'narrator',
-      text: `You and Dave walk off the first green toward the second tee. The mist is lifting. He's loosening up, rolling his shoulders.`,
-      next: 'dave_opener',
+      text: `You leave the first green at Fujo International. Mist threads through the pines. Somewhere below, a stream finds the valley. Martin Voss walks beside you, shoes quiet on the path. Kenji Sato is a half-step ahead â€” precise, unhurried, already reading the next hole as if it owed him money.`,
+      next: 'martin_opener',
     },
     {
-      id: 'dave_opener',
-      speaker: 'dave',
+      id: 'martin_opener',
+      speaker: 'martin',
       text: (state) => {
         const score = state.scorecard[0];
         const par = COURSE_DATA.holes[0].par;
-        if (score <= par) return `"Not a bad start. You know, most guys come out here and hack it around the first hole. Nerves, I guess. You looked pretty calm out there."`;
-        return `"Shake it off. First hole at Pebble Beach — everyone's nervous. The course opens up from here."`;
+        if (score <= par) {
+          return `"Not bad. Sato's tempo on the range was almost irritating. Yours was acceptable." A beat. "Interesting."`;
+        }
+        return `"First hole is paperwork. We file it and move on." He glances at Sato's back. "The mountain does not grade on a curve."`;
       },
       responses: [
         {
-          text: `"Calm? My hands were shaking the entire time. I just have a good poker face."`,
+          text: `"Acceptable is generous. My hands were not on speaking terms with my brain."`,
           label: 'HONEST',
           traitEffects: { humor: 4, zen: -2 },
           partnerEffect: { impression: 6 },
           setFlags: { admitted_nerves: true },
-          next: 'dave_laughs',
+          next: 'martin_after_nerves',
         },
         {
-          text: `"I've been visualizing this round for weeks. Every shot, every hole. I came prepared."`,
+          text: `"I rehearsed this tee box until the slide deck felt jealous."`,
           label: 'CONFIDENT',
           traitEffects: { swagger: 5, focus: 3 },
           partnerEffect: { impression: -2 },
-          setFlags: { claimed_prepared: true },
-          next: 'dave_raises_eyebrow',
+          setFlags: { h1_claimed_prep: true },
+          next: 'martin_after_prep',
         },
         {
-          text: `"The key on that first hole is committing to your line off the tee. That fairway plays wider than it looks if you trust the slope."`,
+          text: `"The fairway tilts more than it looks from the tee. You commit to the left half or you don't commit at all."`,
           label: 'GOLF IQ',
           requires: { knowledge: 55 },
           traitEffects: { knowledge: 4, focus: 2 },
           partnerEffect: { impression: 4 },
-          setFlags: { showed_knowledge_h1: true },
-          next: 'dave_impressed',
+          setFlags: { h1_course_detail: true },
+          next: 'martin_after_course',
         },
         {
-          text: `[Say nothing. Just nod and take in the view.]`,
+          text: `[Say nothing. Let the mist do the talking.]`,
           label: 'STOIC',
           traitEffects: { zen: 5 },
           partnerEffect: { impression: 1 },
@@ -64,43 +66,43 @@ const DIALOGUE_AFTER_HOLE_1 = {
       ],
     },
     {
-      id: 'dave_laughs',
-      speaker: 'dave',
-      text: `Dave laughs — a genuine one, not the polite kind. "Yeah, I get it. My first time here I topped my opening tee shot. Like, topped it. Went maybe forty yards. The starter pretended not to see."`,
+      id: 'martin_after_nerves',
+      speaker: 'martin',
+      text: `"Honesty is inefficient, but it saves time." He almost smiles. "I once shanked one into a sponsor tent. The tent pretended it didn't happen. So did I."`,
       responses: [
         {
-          text: `"That makes me feel significantly better about my life choices."`,
+          text: `"That story makes me feel almost employable."`,
           label: 'WIT',
           traitEffects: { humor: 3 },
           partnerEffect: { impression: 3 },
           end: true,
         },
         {
-          text: `"Everyone's got a first-tee story. What matters is whether you recovered."`,
+          text: `"Recovery matters more than the first swing. That's the whole thesis."`,
           label: 'GRACIOUS',
           traitEffects: { zen: 3, knowledge: 2 },
           partnerEffect: { impression: 4 },
-          setFlags: { dave_shared_story: true },
+          setFlags: { h1_martin_shared: true },
           end: true,
         },
       ],
     },
     {
-      id: 'dave_raises_eyebrow',
-      speaker: 'dave',
-      text: `Dave raises an eyebrow. "Visualizing? Like, with your eyes closed and everything?" There's a half-smile. He's not sure if you're serious.`,
+      id: 'martin_after_prep',
+      speaker: 'martin',
+      text: `"Rehearsed." He says it like a spreadsheet error. "And the round is matching your deck so far?"`,
       responses: [
         {
-          text: `"Dead serious. Sports psychology. The best golfers in the world do it."`,
+          text: `"Line by line. Sports psych isn't magic â€” it's redundancy."`,
           label: 'DOUBLE DOWN',
           traitEffects: { swagger: 4, knowledge: 2 },
           partnerEffect: { impression: -3 },
-          setFlags: { swagger_doubled: true },
+          setFlags: { h1_swagger_double: true },
           shotModifier: -0.3,
-          next: 'dave_skeptical',
+          next: 'martin_skeptical',
         },
         {
-          text: `"...Okay, I watched a YouTube video on the plane. Same thing."`,
+          text: `"I watched a video on the Shinkansen. Close enough."`,
           label: 'DEFLECT WITH HUMOR',
           traitEffects: { humor: 5, swagger: -2 },
           partnerEffect: { impression: 5 },
@@ -109,28 +111,28 @@ const DIALOGUE_AFTER_HOLE_1 = {
       ],
     },
     {
-      id: 'dave_skeptical',
-      speaker: 'dave',
-      text: `"Sure. Well, let's see how the visualization holds up on number two. It's a long one." He pulls a water bottle from his bag and takes a slow sip. He's watching you now, curious. Maybe a little competitive.`,
+      id: 'martin_skeptical',
+      speaker: 'martin',
+      text: `"Interesting." He sips water like he's auditing it. "Number two is long. Show me redundancy."`,
       next: 'end_node',
     },
     {
-      id: 'dave_impressed',
-      speaker: 'dave',
-      text: `Dave tilts his head. "Huh. You actually know this course." He pulls out his yardage book and flips a page. "Most guys just see the ocean and forget to play golf."`,
+      id: 'martin_after_course',
+      speaker: 'martin',
+      text: `Sato turns his head a fraction â€” acknowledgment without applause. Martin nods once. "You did homework. Most people only do scenery."`,
       responses: [
         {
-          text: `"I've studied every hole. Pin positions, prevailing winds, where the bailouts are. This isn't a vacation round for me."`,
+          text: `"This isn't tourism for me. Takeda-Mori expects preparation."`,
           label: 'COURSE SCHOLAR',
           requires: { knowledge: 60 },
           traitEffects: { knowledge: 6, focus: 3 },
           partnerEffect: { impression: 3 },
-          setFlags: { deep_knowledge: true },
+          setFlags: { h1_deep_read: true },
           shotModifier: -0.5,
           end: true,
         },
         {
-          text: `"I just love the game. The course does the rest of the talking."`,
+          text: `"The course is doing most of the talking. I'm just trying to listen."`,
           label: 'HUMBLE',
           traitEffects: { zen: 4, swagger: 2 },
           partnerEffect: { impression: 6 },
@@ -141,7 +143,7 @@ const DIALOGUE_AFTER_HOLE_1 = {
     {
       id: 'walk_quiet',
       speaker: 'narrator',
-      text: `The two of you walk in comfortable silence. The sound of the Pacific fills the gap. Sometimes not saying anything says enough. Dave seems to respect it.`,
+      text: `Silence, but not empty â€” negotiation without words. Martin adjusts his glove. Sato studies a distant ridgeline. You realize you're being allowed to exist without performing.`,
       next: 'end_node',
     },
     {
@@ -153,102 +155,171 @@ const DIALOGUE_AFTER_HOLE_1 = {
   ],
 };
 
-// ─────────────────────────────────────────────
-// BETWEEN HOLES 2 → 3
-// ─────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// BETWEEN HOLES 2 â†’ 3
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DIALOGUE_AFTER_HOLE_2 = {
   id: 'after_h2',
   nodes: [
     {
       id: 'start',
       speaker: 'narrator',
-      text: `Walking to the third tee, you catch your first real glimpse of the ocean through the pines. The light is shifting — golden now, the mist fully gone.`,
-      next: 'dave_topic',
+      text: `The path climbs toward the third tee. Cherry blossoms drift across the cart path like paper errors someone keeps resubmitting. Your phone buzzes once â€” Claire Okada, Martin's assistant, VK.`,
+      next: 'claire_ping',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'claire_ping',
+      speaker: 'narrator',
+      text: `Preview: "Takeda deck on your phone? Martin asked me to confirm. Also â€” breathe. â€”C"`,
+      responses: [
+        {
+          text: `[Fire back: "Deck is on my phone. Tell him green." ]`,
+          label: 'PLAY ALONG',
+          traitEffects: { focus: -2, swagger: 1 },
+          partnerEffect: { impression: 2 },
+          setFlags: { claire_contacted: true, cooperating_with_claire: true },
+          next: 'martin_topic',
+        },
+        {
+          text: `[Reply: "I'll send a clean PDF after the round." ]`,
+          label: 'BOUNDARY',
+          traitEffects: { zen: 2, focus: 1 },
+          setFlags: { claire_contacted: true },
+          next: 'martin_topic',
+        },
+        {
+          text: `[Silence the phone. The ridgeline can wait.]`,
+          label: 'FOCUS',
+          traitEffects: { zen: 3, focus: 2 },
+          next: 'martin_topic',
+        },
+      ],
+    },
+    {
+      id: 'martin_topic',
+      speaker: 'martin',
       text: (state) => {
-        if (hasFlag(state, 'admitted_nerves')) return `"Hey — the shaking hands from the first tee? Completely gone now, right?" He grins.`;
-        if (hasFlag(state, 'claimed_prepared')) return `"So the visualization guy — how's the mental movie going so far? Matching up?"`;
-        return `"You know what I like about this course? It rewards patience. The guys who try to force it always blow up by hole six."`;
+        if (hasFlag(state, 'admitted_nerves')) return `"The shaking hands â€” are we done with that, or is it a recurring agenda item?"`;
+        if (hasFlag(state, 'h1_claimed_prep')) return `"Your rehearsal narrative â€” still tracking? Or did reality add footnotes?"`;
+        return `"You're analytics at VK. Mid-level. You report through Rina's shop, not mine â€” officially." He looks ahead. "Unofficially, I know your last three models. Interesting."`;
       },
       responses: [
         {
-          text: `"Patience? Dave, I'm here to make birdies. You can be patient. I'm going low."`,
+          text: `"You knew my project codes before I knew I was on this trip. That's not networking. That's a file."`,
+          label: 'CALL IT OUT',
+          traitEffects: { swagger: 3, focus: 2 },
+          partnerEffect: { impression: 4 },
+          setFlags: { called_out_martin_research: true },
+          next: 'martin_research_reply',
+        },
+        {
+          text: `"Yes â€” analytics. If you already know the work, maybe we can skip the interview portion."`,
+          label: 'STEADY',
+          traitEffects: { zen: 2, knowledge: 2 },
+          partnerEffect: { impression: 3 },
+          next: 'martin_role_deep',
+        },
+        {
+          text: `"What do you want me to say? I'm flattered you're paying attention."`,
+          label: 'DEFLECT',
+          traitEffects: { humor: 3, swagger: -1 },
+          partnerEffect: { impression: 2 },
+          next: 'martin_role_deep',
+        },
+      ],
+    },
+    {
+      id: 'martin_research_reply',
+      speaker: 'martin',
+      text: `"LinkedIn is public. Your last conference deck leaked in a PDF cache. I did not break laws. I read."`,
+      responses: [
+        {
+          text: `"Fair. Creepy, but fair."`,
+          label: 'CLOSE TOPIC',
+          traitEffects: { humor: 2, zen: 2 },
+          partnerEffect: { impression: 3 },
+          next: 'sato_bridge',
+        },
+      ],
+    },
+    {
+      id: 'martin_role_deep',
+      speaker: 'sato',
+      text: `"A course like this punishes greed early," Sato says softly, as if commenting on weather. "People confuse reach with courage. Courage is knowing which risk is beneath you."`,
+      responses: [
+        {
+          text: `"Is that golf advice or a memo?"`,
+          label: 'WINK',
+          traitEffects: { humor: 3, swagger: 2 },
+          partnerEffect: { impression: 2 },
+          shotModifier: -0.2,
+          end: true,
+        },
+        {
+          text: `"Then I'll stay beneath my risks until the number tells me otherwise."`,
+          label: 'ALIGN',
+          traitEffects: { knowledge: 4, zen: 3, focus: 2 },
+          partnerEffect: { impression: 5 },
+          setFlags: { h2_plays_smart: true },
+          end: true,
+        },
+        {
+          text: `"I'm trying to birdie my career out here. Forgive the reach."`,
           label: 'AGGRESSIVE',
           traitEffects: { swagger: 6, zen: -3 },
           partnerEffect: { impression: 2 },
-          setFlags: { going_low: true },
+          setFlags: { h2_going_low: true },
           shotModifier: -0.2,
-          next: 'dave_challenge',
-        },
-        {
-          text: `"You're right. This course punishes greed. I'd rather make nine pars than chase birdies and make doubles."`,
-          label: 'COURSE MANAGEMENT',
-          requires: { knowledge: 50 },
-          traitEffects: { knowledge: 5, zen: 4, focus: 2 },
-          partnerEffect: { impression: 5 },
-          setFlags: { plays_smart: true },
-          end: true,
-        },
-        {
-          text: `"I'm just trying to enjoy the scenery and not embarrass myself, honestly."`,
-          label: 'SELF-DEPRECATING',
-          traitEffects: { humor: 4, swagger: -2 },
-          partnerEffect: { impression: 4 },
-          end: true,
-        },
-        {
-          text: `"My buddy told me the third hole is where this course starts showing its teeth. Is that true?"`,
-          label: 'CURIOUS',
-          traitEffects: { knowledge: 3, focus: 2 },
-          partnerEffect: { impression: 3 },
-          next: 'dave_warns_three',
+          next: 'martin_bet_offer',
         },
       ],
     },
     {
-      id: 'dave_challenge',
-      speaker: 'dave',
-      text: `Dave stops walking for a second. "Going low? At Pebble?" He grins. "Alright. Tell you what — if you're under par through nine, lunch is on me. If you're over par, you're buying."`,
+      id: 'martin_bet_offer',
+      speaker: 'martin',
+      text: `"Birdie your career?" Martin's voice is flat. "Fine. Under par through nine â€” lunch is mine. Over â€” yours. Sato witnesses. No slides."`,
       responses: [
         {
-          text: `"You're on. Hope you brought your wallet."`,
+          text: `"Witnessed. Hope your expense policy likes kaiseki."`,
           label: 'ACCEPT THE BET',
           traitEffects: { swagger: 5, focus: 3 },
           partnerEffect: { impression: 5 },
-          setFlags: { bet_with_dave: true },
+          setFlags: { bet_with_martin: true },
           end: true,
         },
         {
-          text: `"I don't bet on golf. Bad karma. Let's just play."`,
+          text: `"I'd rather not turn today into a spreadsheet with appetizers."`,
           label: 'DECLINE',
           traitEffects: { zen: 4, swagger: -2 },
           partnerEffect: { impression: -1 },
-          end: true,
+          next: 'sato_bridge',
         },
       ],
     },
     {
-      id: 'dave_warns_three',
-      speaker: 'dave',
-      text: `"Three is where you first play along the cliffs. It's gorgeous and terrifying in equal measure. The fairway slopes toward the ocean. And the wind—" He pauses, holding up a finger to feel the breeze. "Yeah, it's going to be in your face."`,
+      id: 'sato_bridge',
+      speaker: 'narrator',
+      text: `Sato waits while a maintenance cart passes â€” patience as power. The third tee comes into view: tighter than the card suggests.`,
+      next: 'martin_warns_three',
+    },
+    {
+      id: 'martin_warns_three',
+      speaker: 'martin',
+      text: `"Three plays uphill into a lie you can't see from here. Wind finds you even when you're sure it won't."`,
       responses: [
         {
-          text: `"Good to know. I'll club up."`,
+          text: `"I'll club up and aim for the fat side."`,
           label: 'PRACTICAL',
           traitEffects: { knowledge: 4, focus: 3 },
           shotModifier: -0.3,
           end: true,
         },
         {
-          text: `"Wind, cliffs, ocean... sounds like my ex's personality. I can handle it."`,
-          label: 'JOKE',
-          requires: { humor: 45 },
-          traitEffects: { humor: 5, swagger: 2 },
-          partnerEffect: { impression: 4 },
-          setFlags: { ex_joke: true },
+          text: `"If the wind is a partner, I'll stop fighting it for a line."`,
+          label: 'ZEN',
+          requires: { zen: 50 },
+          traitEffects: { zen: 5, focus: 2 },
+          partnerEffect: { impression: 3 },
           end: true,
         },
       ],
@@ -256,101 +327,141 @@ const DIALOGUE_AFTER_HOLE_2 = {
   ],
 };
 
-// ─────────────────────────────────────────────
-// BETWEEN HOLES 3 → 4
-// ─────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// BETWEEN HOLES 3 â†’ 4
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DIALOGUE_AFTER_HOLE_3 = {
   id: 'after_h3',
   nodes: [
     {
       id: 'start',
       speaker: 'narrator',
-      text: `The walk from three to four is short but the scenery is relentless. The entire Pacific coastline stretches south. A seal barks somewhere below.`,
-      next: 'dave_topic',
+      text: `An old stone bridge spans a narrow gorge â€” lichen, moss, the sense that thousands of feet have crossed exactly where your spikes land. Sato slows. Martin slows too, uncharacteristically.`,
+      next: 'sato_history',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'sato_history',
+      speaker: 'sato',
+      text: `"This club began as a retreat for industrialists who needed silence more than score," Sato says. "Silence became a brand. Now we rent it by the hour."`,
+      responses: [
+        {
+          text: `"The history matters. It also prices out the people who built the silence."`,
+          label: 'ENGAGE SATO',
+          traitEffects: { knowledge: 3, zen: 2 },
+          partnerEffect: { impression: 2 },
+          next: 'sato_philosophy',
+        },
+        {
+          text: `[Turn to Martin.] "Your read on the next hole â€” I'd rather hear your numbers than mine."`,
+          label: 'DEFER TO BOSS',
+          traitEffects: { focus: 3, swagger: -1 },
+          partnerEffect: { impression: 5 },
+          next: 'martin_after_defer',
+        },
+        {
+          text: `[Nod, say nothing. Let the bridge hold all three of you.]`,
+          label: 'SILENCE',
+          traitEffects: { zen: 5 },
+          partnerEffect: { impression: 3 },
+          next: 'bridge_quiet',
+        },
+      ],
+    },
+    {
+      id: 'sato_philosophy',
+      speaker: 'sato',
+      text: `"A fair point. But exclusivity is also a filter. The wrong people create noise. Noise kills deals." He looks past you â€” not through you. "Interesting filter, today."`,
+      responses: [
+        {
+          text: `"I'll try not to be noise."`,
+          label: 'HUMBLE',
+          traitEffects: { zen: 4, focus: 2 },
+          partnerEffect: { impression: 4 },
+          setFlags: { aware_sato_watching: true },
+          end: true,
+        },
+      ],
+    },
+    {
+      id: 'martin_after_defer',
+      speaker: 'martin',
+      text: `"Four is short on the card. Long in the mind." He doesn't thank you for the deference. He files it. "Pin front, ridge behind. Miss short, not long."`,
+      responses: [
+        {
+          text: `"Short-side miss. Understood."`,
+          label: 'EXECUTE',
+          traitEffects: { knowledge: 4, focus: 3 },
+          shotModifier: -0.4,
+          end: true,
+        },
+      ],
+    },
+    {
+      id: 'bridge_quiet',
+      speaker: 'narrator',
+      text: `Martin exhales through his nose â€” the smallest surrender. Sato smiles without teeth. The bridge does what bridges do: it keeps you from falling while you pretend you're not afraid of heights.`,
+      next: 'h3_martin_four',
+    },
+    {
+      id: 'h3_martin_four',
+      speaker: 'martin',
       text: (state) => {
-        if (hasFlag(state, 'bet_with_dave')) {
+        if (hasFlag(state, 'bet_with_martin')) {
           const total = state.totalScore;
-          if (total <= 0) return `Dave checks his phone's calculator. "You're ${total === 0 ? 'even' : formatScore(total)}. The bet is very much alive. I'm starting to regret this."`;
-          return `Dave grins. "You're ${formatScore(total)}. My wallet is feeling very safe right now."`;
+          if (total <= 0) return `"You're ${total === 0 ? 'even' : formatScore(total)}. The bet still breathes."`;
+          return `"You're ${formatScore(total)}. My wallet is philosophically comfortable."`;
         }
-        return `"Four is a sneaky one," Dave says, shading his eyes against the sun. "Short par 4, looks easy. It is not easy."`;
+        return `"Four is a postcard that bites. Choose your ego carefully."`;
       },
       responses: [
         {
-          text: `"Short par 4? I'm going for the green off the tee. Driver."`,
-          label: 'GO FOR IT',
-          traitEffects: { swagger: 7, focus: -2, zen: -3 },
-          partnerEffect: { impression: 3 },
-          setFlags: { went_for_4_green: true },
-          shotModifier: 0.5,
-          next: 'dave_react_driver',
-        },
-        {
-          text: `"What's the smart play? Iron off the tee and wedge in?"`,
+          text: `"I'm taking less club and swinging smooth â€” let the ridge feed the ball."`,
           label: 'STRATEGIC',
-          traitEffects: { knowledge: 5, focus: 3 },
-          partnerEffect: { impression: 3 },
-          setFlags: { played_4_smart: true },
+          requires: { knowledge: 50 },
+          traitEffects: { knowledge: 5, zen: 4, focus: 2 },
+          partnerEffect: { impression: 5 },
+          setFlags: { h4_play_smart: true },
           shotModifier: -0.4,
-          next: 'dave_strategy',
+          end: true,
         },
         {
-          text: `[Pull out your phone and sneak a photo of the coastline]`,
+          text: `"I'm going at the pin. Short hole, short memory if it goes wrong."`,
+          label: 'AGGRESSIVE',
+          traitEffects: { swagger: 6, zen: -2, focus: -2 },
+          partnerEffect: { impression: 3 },
+          setFlags: { h4_pin_hunt: true },
+          shotModifier: 0.4,
+          next: 'martin_pin_hunt',
+        },
+        {
+          text: `[Frame the volcano through your phone â€” one quiet shot for the people who aren't here.]`,
           label: 'TOURIST MOMENT',
           traitEffects: { zen: 4, focus: -3, humor: 2 },
           partnerEffect: { impression: 2 },
-          setFlags: { took_photo: true },
+          setFlags: { h4_photo: true },
           end: true,
         },
       ],
     },
     {
-      id: 'dave_react_driver',
-      speaker: 'dave',
-      text: `Dave's eyes widen. "Driver? On four? It's 327 yards. The green is the size of your living room and there's a cliff on the left." He pauses. "...But if you pull it off, it'd be legendary."`,
+      id: 'martin_pin_hunt',
+      speaker: 'martin',
+      text: `"Aggressive." Sato's eyes stay on your hands â€” not your face. "The mountain rewards commitment. It punishes theater."`,
       responses: [
         {
-          text: `"Legends aren't made with 7-irons, Dave."`,
-          label: 'FULL SEND',
-          requires: { swagger: 55 },
-          traitEffects: { swagger: 5 },
-          partnerEffect: { impression: 4 },
-          setFlags: { legend_line: true },
+          text: `"Then I'll commit. No theater. Just math and contact."`,
+          label: 'LOCK IN',
+          traitEffects: { focus: 4, swagger: 3 },
+          partnerEffect: { impression: 3 },
+          setFlags: { aware_sato_watching: true },
+          shotModifier: -0.2,
           end: true,
         },
         {
-          text: `"You know what, you're right. I'll take the iron. Live to fight another hole."`,
+          text: `"You're right. I'll take the fat part of the green."`,
           label: 'WALK IT BACK',
           traitEffects: { knowledge: 3, zen: 3, swagger: -3 },
-          setFlags: { walked_back_driver: true },
           shotModifier: -0.5,
-          end: true,
-        },
-      ],
-    },
-    {
-      id: 'dave_strategy',
-      speaker: 'dave',
-      text: `"Exactly. 5-iron to the center, wedge to the pin. That's how the pros play it." He looks at you with something approaching respect. "Most amateurs can't resist the driver here."`,
-      responses: [
-        {
-          text: `"I've made enough doubles this year to learn the hard way."`,
-          label: 'EXPERIENCE',
-          traitEffects: { knowledge: 3, zen: 3 },
-          partnerEffect: { impression: 4 },
-          end: true,
-        },
-        {
-          text: `"What do the pros know? They get paid. I'm here for fun."`,
-          label: 'REBEL',
-          traitEffects: { humor: 4, swagger: 3, knowledge: -2 },
-          partnerEffect: { impression: 2 },
-          setFlags: { rebel_h4: true },
-          shotModifier: 0.3,
           end: true,
         },
       ],
@@ -358,120 +469,120 @@ const DIALOGUE_AFTER_HOLE_3 = {
   ],
 };
 
-// ─────────────────────────────────────────────
-// BETWEEN HOLES 4 → 5
-// ─────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// BETWEEN HOLES 4 â†’ 5
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DIALOGUE_AFTER_HOLE_4 = {
   id: 'after_h4',
   nodes: [
     {
       id: 'start',
       speaker: 'narrator',
-      text: `You approach the fifth tee. The ocean opens up completely. The chasm between tee and green is impossible to ignore. Dave stops and just stares for a moment.`,
-      next: 'dave_topic',
+      text: `The fifth tee opens onto air. The gorge inhales. Mist rises from below like a second sky. Martin sets his bag down with care â€” reverence or superstition, you can't tell.`,
+      next: 'martin_topic',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
-      text: `"Alright. This is it. The fifth hole. 188 yards over the abyss." He looks at you. "How are you feeling? Honestly."`,
+      id: 'martin_topic',
+      speaker: 'martin',
+      text: `"VK lost a diligence fight on a bridge loan in '19 because someone chased yield in a crosswind." He watches your face, not the drop. "This is that shot. How do you feel?"`,
       responses: [
         {
-          text: `"I feel great. This is why we're here, right? Bring it on."`,
+          text: `"I feel clear. Fear is just incomplete data."`,
           label: 'FEARLESS',
           requires: { swagger: 50 },
           traitEffects: { swagger: 5, zen: 2 },
           partnerEffect: { impression: 4 },
           shotModifier: -0.3,
-          next: 'dave_respects_bravery',
+          next: 'martin_fearless_reply',
         },
         {
-          text: `"Honestly? I might throw up. This is terrifying."`,
+          text: `"Honestly? I'd like to be teleported to the green."`,
           label: 'VULNERABLE',
           traitEffects: { humor: 5, zen: -3, swagger: -2 },
           partnerEffect: { impression: 6 },
           setFlags: { scared_of_five: true },
-          next: 'dave_reassures',
+          next: 'martin_reassure',
         },
         {
-          text: `"I need to think about club selection. What are you hitting?"`,
+          text: `"I've been thinking about my five-year plan more than this carry. That's probably wrong."`,
+          label: 'CAREER REFLECTION',
+          traitEffects: { knowledge: 3, focus: -1, zen: 2 },
+          partnerEffect: { impression: 3 },
+          setFlags: { reflected_on_career: true },
+          next: 'martin_career_reply',
+        },
+        {
+          text: `"What are you hitting â€” and why?"`,
           label: 'TACTICAL',
           traitEffects: { knowledge: 4, focus: 3 },
           partnerEffect: { impression: 2 },
-          next: 'dave_club_talk',
-        },
-        {
-          text: `"Let me take a minute. I want to remember this."`,
-          label: 'MINDFUL',
-          requires: { zen: 55 },
-          traitEffects: { zen: 6, focus: 2 },
-          partnerEffect: { impression: 3 },
-          setFlags: { savored_moment: true },
-          shotModifier: -0.4,
-          end: true,
+          next: 'martin_clubs',
         },
       ],
     },
     {
-      id: 'dave_respects_bravery',
-      speaker: 'dave',
-      text: (state) => {
-        if (hasFlag(state, 'legend_line')) return `"Legends aren't made with 7-irons..." He quotes you back. "Alright, let's see if that energy holds over a hundred-foot drop."`;
-        return `"I like that attitude. Most people freeze up here." He claps you on the shoulder. "Don't freeze up."`;
-      },
+      id: 'martin_fearless_reply',
+      speaker: 'sato',
+      text: `"Incomplete data," Sato repeats, tasting the phrase. "Then you are already ahead of most consultants."`,
       end: true,
     },
     {
-      id: 'dave_reassures',
-      speaker: 'dave',
-      text: `Dave laughs softly. "Hey, I lost two balls here my first time. Two. Just aim at the center of the green and make a swing. Don't think about the cliff. ...Which, now that I've said it, is all you're going to think about."`,
+      id: 'martin_reassure',
+      speaker: 'martin',
+      text: `"Good. Fear means you're awake." He hands you a tee. "Aim at the center of the safest color. Do not be interesting."`,
       responses: [
         {
-          text: `"Great pep talk, Dave. Really nailed it."`,
-          label: 'SARCASM',
-          traitEffects: { humor: 4, swagger: 2 },
+          text: `"You say 'interesting' like it's a threat."`,
+          label: 'PUSH BACK',
+          traitEffects: { humor: 3, swagger: 2 },
           partnerEffect: { impression: 3 },
           end: true,
         },
         {
-          text: `"Two balls? Okay, that actually makes me feel better. I only brought a dozen."`,
-          label: 'SELF-AWARE',
-          traitEffects: { humor: 3, zen: 2 },
+          text: `"Center color. Boring swing. I can do boring."`,
+          label: 'GROUND',
+          traitEffects: { zen: 4, focus: 3 },
           partnerEffect: { impression: 4 },
+          shotModifier: -0.3,
           end: true,
         },
       ],
     },
     {
-      id: 'dave_club_talk',
-      speaker: 'dave',
-      text: `"I'm hitting 5-iron. The wind is into us, so it's playing more like 200. You've got to commit to the club and commit to the swing. No in-between shots here. If you steer it, it dies in the wind."`,
+      id: 'martin_career_reply',
+      speaker: 'martin',
+      text: `"Five-year plans are fiction. Quarterly plans are comedy." A pause. "Still, at least you're thinking in horizons. That's rarer than talent."`,
       responses: [
         {
-          text: `"5-iron it is. Same club, same target. I'll match you."`,
-          label: 'MIRROR DAVE',
+          text: `"Horizons are just hazards with better branding."`,
+          label: 'WIT',
+          traitEffects: { humor: 4, knowledge: 2 },
+          partnerEffect: { impression: 3 },
+          end: true,
+        },
+      ],
+    },
+    {
+      id: 'martin_clubs',
+      speaker: 'martin',
+      text: `"5-iron. Wind is helping until it isn't. If you steer, you add spin you can't afford."`,
+      responses: [
+        {
+          text: `"I'll match your 5 and trust the number."`,
+          label: 'MIRROR',
           traitEffects: { focus: 3, knowledge: 3 },
           partnerEffect: { impression: 3 },
           shotModifier: -0.2,
           end: true,
         },
         {
-          text: `"I hit my 5-iron further than you. I'm going 6-iron, maybe even 7."`,
+          text: `"I'm one club less. I need to prove something to nobody."`,
           label: 'FLEX',
           requires: { swagger: 60 },
           traitEffects: { swagger: 5, focus: -2 },
           partnerEffect: { impression: -3 },
-          setFlags: { flexed_on_dave: true },
+          setFlags: { h5_flex_club: true },
           shotModifier: 0.4,
-          end: true,
-        },
-        {
-          text: `"What about a punched 4-iron? Keep it under the wind?"`,
-          label: 'ADVANCED PLAY',
-          requires: { knowledge: 65 },
-          traitEffects: { knowledge: 6, focus: 4 },
-          partnerEffect: { impression: 5 },
-          setFlags: { punch_shot_idea: true },
-          shotModifier: -0.6,
           end: true,
         },
       ],
@@ -479,9 +590,9 @@ const DIALOGUE_AFTER_HOLE_4 = {
   ],
 };
 
-// ─────────────────────────────────────────────
-// BETWEEN HOLES 5 → 6
-// ─────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// BETWEEN HOLES 5 â†’ 6
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DIALOGUE_AFTER_HOLE_5 = {
   id: 'after_h5',
   nodes: [
@@ -491,119 +602,95 @@ const DIALOGUE_AFTER_HOLE_5 = {
       text: (state) => {
         const score5 = state.scorecard[4];
         const par5 = COURSE_DATA.holes[4].par;
-        if (score5 !== null && score5 <= par5) return `You walk off the fifth green with a grin you can't suppress. Dave is nodding. The ocean roars its approval below.`;
-        return `You walk off the fifth green. The ocean below is indifferent to your scorecard. Hole six awaits — mercifully, it's away from the cliffs.`;
+        if (score5 !== null && score5 <= par5) {
+          return `You walk off the fifth green. The gorge exhales without you. Somewhere, a crow sounds pleased with itself.`;
+        }
+        return `The fifth lets you leave anyway. Golf is rude that way. The path bends toward water â€” a mirror waiting to argue with your tempo.`;
       },
-      next: 'dave_topic',
+      next: 'martin_topic',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'martin_topic',
+      speaker: 'martin',
       text: (state) => {
         if (hasFlag(state, 'scared_of_five')) {
           const score5 = state.scorecard[4];
           const par5 = COURSE_DATA.holes[4].par;
-          if (score5 !== null && score5 <= par5) return `"You said you were going to throw up back there. Then you go and do THAT?" He shakes his head. "The scared ones always play better."`;
-          return `"Hey, you survived. That's the main thing. A lot of golf left." He's being kind. You appreciate it.`;
+          if (score5 !== null && score5 <= par5) {
+            return `"You were afraid," Martin says. "Then you executed. Interesting combination."`;
+          }
+          return `"Still breathing? Good. That's the minimum viable outcome."`;
         }
-        if (hasFlag(state, 'flexed_on_dave')) return `Dave is quiet for a moment. "So... how'd the 6-iron work out?" There's a glint in his eye.`;
-        return `"Six is a breather," Dave says. "Par 5, wide fairway. Time to make a birdie and put some momentum together."`;
+        if (hasFlag(state, 'h5_flex_club')) return `"Your club choice made a statement." He doesn't say whether it was literature or a memo.`;
+        if (state.partner.impression >= 55) {
+          return `"When I started VK," Martin says, not looking at you, "I told myself I was building shelter for competent people. Not empires. Shelter." He stops. "That sounds sentimental. Ignore half of it."`;
+        }
+        return `"Six is water and ego. Keep the first, lose the second."`;
       },
       responses: [
         {
-          text: `"I need a water and a breather. Those last two holes took years off my life."`,
-          label: 'EXHAUSTED',
-          traitEffects: { humor: 3, zen: 3 },
+          text: `"Shelter is load-bearing honesty. That's not sentimental. It's structural."`,
+          label: 'EMPATHY',
+          requires: (state) => state.partner.impression >= 55,
+          traitEffects: { zen: 5, knowledge: 2 },
+          partnerEffect: { impression: 6 },
+          setFlags: { martin_family_story: true, empathized_with_martin: true },
+          end: true,
+        },
+        {
+          text: `"Six is water and ego â€” I'll keep the water."`,
+          label: 'ACK',
+          requires: (state) => state.partner.impression < 55,
+          traitEffects: { zen: 3, focus: 3 },
           partnerEffect: { impression: 3 },
-          next: 'dave_water',
+          end: true,
         },
         {
-          text: `"Birdie sounds good. What's the play on six — go for it in two?"`,
-          label: 'HUNTING',
-          traitEffects: { swagger: 3, knowledge: 3 },
-          partnerEffect: { impression: 2 },
-          next: 'dave_strategy_6',
+          text: `"Fear helped on five. I'm not proud of how sane that makes me."`,
+          label: 'AFTERMATH',
+          requires: (state) => hasFlag(state, 'scared_of_five'),
+          traitEffects: { humor: 3, zen: 3 },
+          partnerEffect: { impression: 4 },
+          end: true,
         },
         {
-          text: `"Dave, real talk — how often do you play here?"`,
-          label: 'PERSONAL',
-          traitEffects: { humor: 2, zen: 2 },
-          partnerEffect: { impression: 5 },
-          setFlags: { asked_dave_personal: true },
-          next: 'dave_opens_up',
+          text: `"VK is an empire now whether you meant it or not."`,
+          label: 'PROVOKE',
+          requires: (state) => state.partner.impression >= 55,
+          traitEffects: { swagger: 3, knowledge: 2 },
+          partnerEffect: { impression: -2 },
+          setFlags: { martin_family_story: true, missed_moment: true },
+          end: true,
+        },
+        {
+          text: `"Tell me the real sentence you didn't say."`,
+          label: 'PRESS',
+          requires: (state) => state.partner.impression >= 55 && state.traits.swagger >= 55,
+          traitEffects: { swagger: 2, focus: 2 },
+          partnerEffect: { impression: 4 },
+          setFlags: { martin_family_story: true },
+          next: 'martin_family_more',
         },
       ],
     },
     {
-      id: 'dave_water',
-      speaker: 'dave',
-      text: `He tosses you a water from his bag. "Here. Hydrate. Six is long — you'll need the energy." He takes a pull from his own bottle and looks back at the coastline. "Still can't believe we're here, honestly."`,
+      id: 'martin_family_more',
+      speaker: 'martin',
+      text: `"The real sentence is that I started VK because I was tired of being someone's appendix." His laugh is dry soil. "There. Career therapy. Invoice Claire."`,
       responses: [
         {
-          text: `"Same. I keep expecting someone to tell me I'm not supposed to be here."`,
-          label: 'IMPOSTOR SYNDROME',
-          traitEffects: { humor: 3, swagger: -2, zen: 2 },
-          partnerEffect: { impression: 5 },
-          setFlags: { impostor_feeling: true },
-          end: true,
-        },
-        {
-          text: `"I earned this. Let's make the most of it."`,
-          label: 'OWNED IT',
-          traitEffects: { swagger: 4, focus: 2 },
-          partnerEffect: { impression: 2 },
-          end: true,
-        },
-      ],
-    },
-    {
-      id: 'dave_strategy_6',
-      speaker: 'dave',
-      text: `"In two? There's a creek about 80 out from the green. If you can carry it, the green's accessible. If you can't, lay up and wedge it close. Depends on how you're hitting your long clubs."`,
-      responses: [
-        {
-          text: `"I'll decide when I see my lie. No point committing now."`,
-          label: 'PATIENT',
-          traitEffects: { knowledge: 4, zen: 3, focus: 2 },
-          shotModifier: -0.3,
-          end: true,
-        },
-        {
-          text: `"If it's in the fairway, I'm going for it. Period."`,
-          label: 'COMMITTED',
-          traitEffects: { swagger: 5, focus: 2, zen: -2 },
-          setFlags: { going_for_6_in_two: true },
-          end: true,
-        },
-      ],
-    },
-    {
-      id: 'dave_opens_up',
-      speaker: 'dave',
-      text: `Dave looks surprised by the question. "This is my third time. First was a corporate thing — barely played, just drank. Second was with my dad, right before his knee surgery. He couldn't finish. We made it through seven." He pauses. "This is the first time I've actually been able to enjoy it."`,
-      responses: [
-        {
-          text: `"That's a hell of a thing, man. Your dad would love to see you out here finishing what you started."`,
+          text: `"Then today's round is the opposite of an appendix. It's the main body."`,
           label: 'EMPATHETIC',
           traitEffects: { zen: 5, humor: 1 },
           partnerEffect: { impression: 8 },
-          setFlags: { dave_dad_story: true, empathized_with_dave: true },
+          setFlags: { empathized_with_martin: true },
           end: true,
         },
         {
-          text: `"Well, you're playing great. He'd be proud."`,
-          label: 'ENCOURAGING',
-          traitEffects: { zen: 3 },
-          partnerEffect: { impression: 6 },
-          setFlags: { dave_dad_story: true },
-          end: true,
-        },
-        {
-          text: `"Corporate golf is the worst. All politics, no fun."`,
-          label: 'DEFLECT',
-          traitEffects: { humor: 2, swagger: 2 },
-          partnerEffect: { impression: -2 },
-          setFlags: { dave_dad_story: true, missed_moment: true },
+          text: `"Good to know my boss has origin lore."`,
+          label: 'LIGHT',
+          traitEffects: { humor: 3 },
+          partnerEffect: { impression: 4 },
           end: true,
         },
       ],
@@ -620,82 +707,93 @@ const DIALOGUE_AFTER_HOLE_6 = {
     {
       id: 'start',
       speaker: 'narrator',
-      text: `The seventh tee is ahead — the postcard hole. Even from here you can see the tiny green perched on the rocks. A crowd of spectators has gathered. Someone has a camera with a long lens.`,
-      next: 'dave_topic',
+      text: `The sixth hugs a lake so still it looks staged. Cherry petals float on the water like rejected cover sheets. Sato's phone vibrates once — a sound too polite to be ignored.`,
+      next: 'sato_excuse',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'sato_excuse',
+      speaker: 'narrator',
+      text: `Sato bows slightly. "Forgive me — Tokyo." He steps onto the path ahead, voice low, syllables you don't need to understand to recognize weight.`,
+      next: 'claire_h6',
+    },
+    {
+      id: 'claire_h6',
+      speaker: 'narrator',
+      text: `Your phone lights up. Claire: "Takeda-Mori asked for a clean timeline narrative by close. I can keep it fuzzy if you text YES. No one else sees this thread. —C"`,
+      responses: [
+        {
+          text: `[Text YES. Let her handle the thread.]`,
+          label: 'DEAL',
+          traitEffects: { focus: -3, swagger: 1 },
+          partnerEffect: { impression: 1 },
+          setFlags: { claire_contacted: true, cooperating_with_claire: true, accepted_claire_deal: true },
+          next: 'martin_private',
+        },
+        {
+          text: `[Text: "No. I'll own the timeline after the round."]`,
+          label: 'REFUSE',
+          traitEffects: { zen: 2, focus: 2 },
+          setFlags: { claire_contacted: true },
+          next: 'martin_private',
+        },
+        {
+          text: `[Archive the message unread. The lake is loud enough.]`,
+          label: 'SILENCE',
+          traitEffects: { zen: 4, focus: 1 },
+          next: 'martin_private',
+        },
+      ],
+    },
+    {
+      id: 'martin_private',
+      speaker: 'martin',
+      onEnter: (state) => {
+        setFlag(state, 'sato_stepped_away_h6', true);
+      },
       text: (state) => {
-        if (hasFlag(state, 'empathized_with_dave')) return `Dave walks close. "Hey, thanks for what you said back there. About my dad. Means a lot." He clears his throat. "Now, seven. The postcard hole. 106 yards. Sand wedge. Don't overthink it."`;
-        if (hasFlag(state, 'bet_with_dave')) {
-          const score = state.totalScore;
-          return `"Scorecheck: you're ${formatScore(score)}. ${score <= 0 ? "I'm genuinely worried about my wallet." : "My wallet's still feeling good."} But seven can flip anything. 106 yards. All or nothing."`;
+        if (hasFlag(state, 'accepted_claire_deal')) {
+          return `"Claire is efficient." Martin doesn't look at your pocket. "Efficiency is a kind of love language. Be careful who you let translate."`;
         }
-        return `"Seven. The shortest hole at Pebble Beach and the scariest. 106 yards. Pick your club and pray." Dave grins.`;
+        return `"VK is not immortal," Martin says, too calmly. "Partnerships like Takeda-Mori — they don't fail in boardrooms. They fail in small moments. Like this walk."`;
       },
       responses: [
         {
-          text: `"106 yards? That's just a sand wedge. I hit my sand wedge in my sleep."`,
-          label: 'COCKY',
-          traitEffects: { swagger: 5, focus: -2 },
-          partnerEffect: { impression: 1 },
-          setFlags: { cocky_on_7: true },
-          shotModifier: 0.3,
+          text: `"Sometimes I don't know if I'm building a career or renting one."`,
+          label: 'DOUBT',
+          traitEffects: { zen: 4, swagger: -2 },
+          partnerEffect: { impression: 7 },
+          setFlags: { shared_doubt_with_martin: true },
+          next: 'martin_doubt_reply',
+        },
+        {
+          text: `"Then we make this walk count. Small moment, clean swing."`,
+          label: 'GROUND',
+          traitEffects: { zen: 5, focus: 3 },
+          partnerEffect: { impression: 6 },
+          setFlags: { grounded_martin: true },
           end: true,
         },
         {
-          text: `"The wind is the entire game here, right? What's it doing?"`,
-          label: 'TACTICAL',
-          traitEffects: { knowledge: 4, focus: 4 },
+          text: `"Is that vulnerability, or are you testing whether I flinch?"`,
+          label: 'CALL OUT',
+          requires: { knowledge: 55 },
+          traitEffects: { knowledge: 4, swagger: 2 },
           partnerEffect: { impression: 3 },
-          next: 'dave_wind_read',
-        },
-        {
-          text: `"Hold on. I need to take this in for a second. This is the most photographed hole in golf."`,
-          label: 'APPRECIATE',
-          requires: { zen: 50 },
-          traitEffects: { zen: 5, focus: 2 },
-          partnerEffect: { impression: 4 },
-          setFlags: { appreciated_seven: true },
-          shotModifier: -0.3,
-          end: true,
-        },
-        {
-          text: `"Dave. I need you to be honest. If I shank this into the ocean in front of all these people, can we leave the country?"`,
-          label: 'PANIC HUMOR',
-          requires: { humor: 50 },
-          traitEffects: { humor: 6, zen: -2, swagger: -1 },
-          partnerEffect: { impression: 5 },
-          setFlags: { shank_joke: true },
-          end: true,
+          next: 'martin_test_reply',
         },
       ],
     },
     {
-      id: 'dave_wind_read',
-      speaker: 'dave',
-      text: `Dave holds up a pinch of grass and lets it fall. "Left to right, maybe 10-15 miles per hour. See the flag? It's stiff. I'd aim left edge and let the wind bring it back. But the key is committing. Any hesitation and the wind eats you alive."`,
-      responses: [
-        {
-          text: `"Left edge, full commit. Got it. Thanks."`,
-          label: 'ABSORB',
-          traitEffects: { knowledge: 3, focus: 3, zen: 2 },
-          partnerEffect: { impression: 3 },
-          shotModifier: -0.5,
-          end: true,
-        },
-        {
-          text: `"What if I just punch a low one under the wind?"`,
-          label: 'CREATIVE',
-          requires: { knowledge: 60 },
-          traitEffects: { knowledge: 5, swagger: 3 },
-          partnerEffect: { impression: 4 },
-          setFlags: { creative_7: true },
-          shotModifier: -0.3,
-          end: true,
-        },
-      ],
+      id: 'martin_doubt_reply',
+      speaker: 'martin',
+      text: `"Rent is honest. Ownership is a story we tell so we can sleep." He adjusts his glove. "Interesting doubt. Don't put it in the deck."`,
+      end: true,
+    },
+    {
+      id: 'martin_test_reply',
+      speaker: 'martin',
+      text: `"Yes." No pause. "Both."`,
+      end: true,
     },
   ],
 };
@@ -709,76 +807,75 @@ const DIALOGUE_AFTER_HOLE_7 = {
     {
       id: 'start',
       speaker: 'narrator',
-      text: `The walk to eight is short and heavy with anticipation. This is the hole you see on television. The chasm shot. Dave is quiet. You're both thinking the same thing.`,
-      next: 'dave_topic',
+      text: `Paper lanterns hang along the short seventh — soft light against the ridge. The hole is a haiku: short, disciplined, easy to ruin with ambition.`,
+      next: 'martin_topic',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'martin_topic',
+      speaker: 'martin',
       text: (state) => {
-        if (hasFlag(state, 'shank_joke')) return `"So, about that shank joke on seven — you survived. Now do it again. Except this one is 200 yards. Over a cliff." He's grinning but his eyes aren't.`;
-        if (hasFlag(state, 'cocky_on_7')) {
-          const score7 = state.scorecard[6];
-          const par7 = COURSE_DATA.holes[6].par;
-          if (score7 !== null && score7 > par7) return `"The 'sand wedge in your sleep' didn't exactly work out, did it? Maybe wake up for this one. Eight is no joke."`;
-          return `"Okay, the confidence is paying off. But eight is different. This one tests your soul, not your sand wedge."`;
+        if (hasFlag(state, 'grounded_martin')) {
+          return `"You grounded me back there," Martin says quietly. "I don't like needing that. I needed it anyway."`;
         }
-        return `"This is it. The eighth at Pebble Beach. I don't care what your handicap is — this tee shot is going to make your heart race."`;
+        if (hasFlag(state, 'bet_with_martin')) {
+          const score = state.totalScore;
+          return `"Scorecheck: ${formatScore(score)}. ${score <= 0 ? "The bet is alive. So are my ulcers." : "The bet is comfortable. For me."}"`;
+        }
+        return `"Short hole. Big silence." He watches the lantern light on the water. "Pick a club and mean it."`;
       },
       responses: [
         {
-          text: `"I've been thinking about this shot since I booked the round. I'm ready."`,
-          label: 'PREPARED',
-          traitEffects: { focus: 4, swagger: 3 },
+          text: `"Wedge. Full. No story."`,
+          label: 'COMMIT',
+          traitEffects: { focus: 4, swagger: 2 },
           partnerEffect: { impression: 3 },
+          shotModifier: -0.4,
+          end: true,
+        },
+        {
+          text: `"Sato's still on his call. We're being watched by the course itself."`,
+          label: 'PARANOID ZEN',
+          traitEffects: { zen: 4, focus: 2 },
+          setFlags: { aware_sato_watching: true },
+          next: 'sato_returns',
+        },
+        {
+          text: `"If I shank this, I'm changing my name and moving to Hokkaido."`,
+          label: 'GALLOWS',
+          requires: { humor: 50 },
+          traitEffects: { humor: 5, zen: -2 },
+          partnerEffect: { impression: 4 },
+          setFlags: { h7_shank_joke: true },
+          end: true,
+        },
+        {
+          text: `"I'm going to stand here ten seconds and pretend nothing on my phone exists."`,
+          label: 'PRESENCE',
+          requires: { zen: 50 },
+          traitEffects: { zen: 5, focus: 2 },
+          partnerEffect: { impression: 4 },
           shotModifier: -0.3,
-          end: true,
-        },
-        {
-          text: `"Let's not talk about it. Just let me hit it before I think too much."`,
-          label: 'DON\'T OVERTHINK',
-          traitEffects: { zen: 5, focus: -2 },
-          partnerEffect: { impression: 2 },
-          end: true,
-        },
-        {
-          text: `"Tell me about the wind. Tell me about the distance. Tell me everything. I need data."`,
-          label: 'ANALYTICAL',
-          requires: { knowledge: 55 },
-          traitEffects: { knowledge: 5, focus: 4 },
-          partnerEffect: { impression: 2 },
-          next: 'dave_briefing',
-        },
-        {
-          text: `"Dave, if I don't make it across, tell my family I died doing what I loved."`,
-          label: 'GALLOWS HUMOR',
-          requires: { humor: 55 },
-          traitEffects: { humor: 6, zen: -1 },
-          partnerEffect: { impression: 5 },
-          setFlags: { gallows_humor_8: true },
           end: true,
         },
       ],
     },
     {
-      id: 'dave_briefing',
-      speaker: 'dave',
-      text: `"Okay, here's the deal. It's 200 yards to the far cliff. The fairway is up there on the right — you can't see it from here, but it's wide. Aim at the lone tree on the ridge. Wind is cross, left to right. You need a full committed swing — if you bail out or decelerate, the ball doesn't clear. This is a 'trust your swing' shot."`,
+      id: 'sato_returns',
+      speaker: 'sato',
+      text: `Sato reappears at the cart path, pocketing his phone. "The shortest holes ask the longest questions," he says. "Answer with your feet, not your resume."`,
       responses: [
         {
-          text: `"Lone tree, full send, don't flinch. Got it."`,
-          label: 'LOCKED IN',
-          traitEffects: { focus: 5, knowledge: 3, zen: 2 },
-          partnerEffect: { impression: 4 },
-          shotModifier: -0.5,
+          text: `"Then my feet say: middle of the green."`,
+          label: 'AGREE',
+          traitEffects: { knowledge: 3, zen: 3 },
+          partnerEffect: { impression: 3 },
+          shotModifier: -0.3,
           end: true,
         },
         {
-          text: `"What if I aimed further right for a bigger margin? Play for the wide part of the fairway?"`,
-          label: 'SAFE ROUTE',
-          requires: { knowledge: 60 },
-          traitEffects: { knowledge: 4, zen: 3, swagger: -1 },
-          shotModifier: -0.4,
+          text: `"My resume is already in the lake."`,
+          label: 'JOKE',
+          traitEffects: { humor: 4, swagger: 1 },
           end: true,
         },
       ],
@@ -798,21 +895,23 @@ const DIALOGUE_AFTER_HOLE_8 = {
       text: (state) => {
         const score8 = state.scorecard[7];
         const par8 = COURSE_DATA.holes[7].par;
-        if (score8 !== null && score8 <= par8) return `You walk off the eighth green buzzing. That hole — the chasm, the cliff, the shot — it's the reason people come to Pebble Beach. And you just played it.`;
-        return `Eight is behind you. The chasm is behind you. Whatever the scorecard says, you hit a shot over the Pacific Ocean at Pebble Beach. That counts for something.`;
+        if (score8 !== null && score8 <= par8) {
+          return `You walk off the eighth green along the volcanic ridgeline. The drop-off doesn't negotiate. Neither did that putt.`;
+        }
+        return `Eight releases you back to solid earth — a cruel kindness. Mist gathers in the trees like an NDA you never signed.`;
       },
-      next: 'dave_topic',
+      next: 'martin_topic',
     },
     {
-      id: 'dave_topic',
-      speaker: 'dave',
+      id: 'martin_topic',
+      speaker: 'martin',
       text: (state) => {
-        if (hasFlag(state, 'gallows_humor_8')) return `"You're alive! I was ready to call your family." He's beaming. The shared tension of eight has bonded you.`;
-        if (hasFlag(state, 'bet_with_dave')) {
+        if (hasFlag(state, 'h7_shank_joke')) return `"Hokkaido can wait," Martin says. "You survived seven first."`;
+        if (hasFlag(state, 'bet_with_martin')) {
           const score = state.totalScore;
-          return `"Last hole. ${formatScore(score)} through eight. ${score <= 0 ? "I can't believe this. One more hole and I'm buying lunch for the guy I met four hours ago." : "Still time to make a run. Nine is a tough par 4 though."}"`;
+          return `"Last hole of the front. ${formatScore(score)}. ${score <= 0 ? "My wallet is in danger. Interesting." : "Still time. Interesting."}"`;
         }
-        return `"One more hole. The ninth. Longest par 4 on the course, right along the cliff." He exhales. "What a front nine this has been."`;
+        return `"Nine is business length. Wind off the ridge. Don't romanticize the landing zone."`;
       },
       responses: [
         {
@@ -821,53 +920,62 @@ const DIALOGUE_AFTER_HOLE_8 = {
           traitEffects: { zen: 5, humor: 2 },
           partnerEffect: { impression: 6 },
           setFlags: { sentimental_9: true },
-          next: 'dave_sentimental',
+          next: 'martin_sentimental',
         },
         {
-          text: `"One more. Let's finish strong."`,
-          label: 'COMPETITIVE',
+          text: `"One more. Clean card, clean story for Tokyo."`,
+          label: 'CLOSE STRONG',
           traitEffects: { focus: 4, swagger: 3 },
           partnerEffect: { impression: 3 },
           shotModifier: -0.3,
           end: true,
         },
         {
-          text: `"Dave, whatever happens on nine — this has been a great round. Thanks for the company."`,
-          label: 'GENUINE',
+          text: `"Martin — whatever happens on nine, thank you for today. I mean it."`,
+          label: 'THANK',
           traitEffects: { zen: 4, humor: 2 },
           partnerEffect: { impression: 8 },
-          setFlags: { thanked_dave: true },
-          next: 'dave_touched',
+          setFlags: { thanked_martin: true },
+          next: 'martin_thanked',
         },
         {
-          text: `"Alright, nine. 466 yards. What's the strategy?"`,
-          label: 'ALL BUSINESS',
-          requires: { focus: 55 },
-          traitEffects: { focus: 5, knowledge: 3 },
+          text: `"Talk me through nine like a diligence memo: hazards, bailout, intent."`,
+          label: 'ANALYTICAL',
+          requires: { knowledge: 55 },
+          traitEffects: { knowledge: 5, focus: 4 },
           partnerEffect: { impression: 2 },
           shotModifier: -0.4,
-          next: 'dave_nine_strategy',
+          next: 'martin_nine_brief',
+        },
+        {
+          text: `"If I miss left, I'm volunteering as tribute to the volcano."`,
+          label: 'GALLOWS',
+          requires: { humor: 55 },
+          traitEffects: { humor: 6, zen: -1 },
+          partnerEffect: { impression: 5 },
+          setFlags: { gallows_humor_8: true },
+          end: true,
         },
       ],
     },
     {
-      id: 'dave_sentimental',
-      speaker: 'dave',
+      id: 'martin_sentimental',
+      speaker: 'martin',
       text: (state) => {
-        if (hasFlag(state, 'dave_dad_story')) return `Dave nods slowly. "I know what you mean. My dad said the same thing — the first time we played here. 'Every round ends, Dave. That's what makes them matter.'"`;
-        return `"Me neither." Dave looks out at the ocean. "But that's the thing about golf, right? The round always ends. You just hope the next one comes soon enough."`;
+        if (hasFlag(state, 'martin_family_story')) return `"Rounds end," Martin says. "That's why people like us over-schedule. My mother used to call golf 'negotiated loss.' She wasn't wrong."`;
+        return `"Neither do I." He looks at the lanterns behind you as if they're inventory. "But loss is coming. Might as well name it."`;
       },
       responses: [
         {
-          text: `"Your dad sounds like a wise guy."`,
+          text: `"Negotiated loss still beats unnegotiated chaos."`,
           label: 'CALLBACK',
-          requiresFlag: 'dave_dad_story',
-          traitEffects: { zen: 4 },
+          requiresFlag: 'martin_family_story',
+          traitEffects: { zen: 4, knowledge: 2 },
           partnerEffect: { impression: 6 },
           end: true,
         },
         {
-          text: `"Let's make this last hole count, then."`,
+          text: `"Then let's make the last hole honest."`,
           label: 'RESOLVE',
           traitEffects: { focus: 4, swagger: 2 },
           shotModifier: -0.3,
@@ -876,34 +984,33 @@ const DIALOGUE_AFTER_HOLE_8 = {
       ],
     },
     {
-      id: 'dave_touched',
-      speaker: 'dave',
+      id: 'martin_thanked',
+      speaker: 'martin',
       text: (state) => {
         const imp = state.partner.impression;
-        if (imp >= 70) return `Dave stops walking. He actually stops. "You know what — same. I wasn't sure what to expect today, and this has been one of the best rounds I've ever played. Not the score. The round." He extends a fist bump. That's the highest honor in guy language.`;
-        return `Dave nods. "Yeah. Yeah, it's been solid." He seems to mean it, even if he's not the sentimental type. "Let's close it out."`;
+        if (imp >= 70) return `Martin stops. Actually stops. "You're welcome." Two words, fully audited. "VK could use more people who say what they mean. Dangerous habit."`;
+        return `"Noted." He almost smiles. "Let's finish before the mist makes us poetic."`;
       },
       end: true,
     },
     {
-      id: 'dave_nine_strategy',
-      speaker: 'dave',
-      text: `"466, wind behind us. The fairway runs along the cliff — ocean left. It's the longest par 4 but the wind helps. Driver, aim right-center, and let the wind push it. The approach is long, so position off the tee is everything."`,
+      id: 'martin_nine_brief',
+      speaker: 'martin',
+      text: `"Driver for position, not theater. Center ridge line. Approach plays shorter than the card — altitude steals yardage. Miss short. Long is a story you don't want told."`,
       responses: [
         {
-          text: `"Right-center, let the wind work. This is a three-club hole — driver, long iron, putter."`,
-          label: 'CLINICAL',
-          requires: { knowledge: 60 },
-          traitEffects: { knowledge: 5, focus: 4 },
+          text: `"Center ridge. Short miss. Intent clear."`,
+          label: 'LOCKED',
+          traitEffects: { knowledge: 4, focus: 4 },
           partnerEffect: { impression: 4 },
           shotModifier: -0.5,
           end: true,
         },
         {
-          text: `"I'm just going to rip it and see what happens. Last hole energy."`,
-          label: 'LAST HOLE ENERGY',
-          traitEffects: { swagger: 5, zen: -1 },
-          partnerEffect: { impression: 2 },
+          text: `"Or I could just hit it hard and hope the mountain forgives me."`,
+          label: 'CHAOS',
+          traitEffects: { swagger: 4, zen: -1 },
+          partnerEffect: { impression: 1 },
           end: true,
         },
       ],

@@ -30,7 +30,7 @@ const UI = {
     this.actionEl.innerHTML = '';
   },
 
-  async typeText(text, cssClass = '', delayMs = 30) {
+  async typeText(text, cssClass = '', delayMs = 18) {
     const p = document.createElement('p');
     if (cssClass) p.className = cssClass;
     this.narrativeEl.appendChild(p);
@@ -44,9 +44,11 @@ const UI = {
       p.style.opacity = '1';
       p.style.transform = 'none';
       p.style.animation = 'none';
+      let tickCount = 0;
       for (let i = 0; i < text.length; i++) {
         p.textContent += text[i];
         main.scrollTop = main.scrollHeight;
+        if (++tickCount % 3 === 0 && text[i] !== ' ') SFX.tick();
         if (text[i] === '.' || text[i] === '—') {
           await sleep(delayMs * 3);
         } else if (text[i] === ',') {
@@ -92,7 +94,9 @@ const UI = {
       btn.className = 'choice-btn';
       btn.innerHTML = `<span class="choice-label">${choice.label}</span>${choice.text}`;
       btn.style.animationDelay = `${idx * 0.1}s`;
+      btn.addEventListener('mouseenter', () => SFX.hover());
       btn.addEventListener('click', () => {
+        SFX.select();
         this.choicesEl.querySelectorAll('.choice-btn').forEach(b => {
           b.disabled = true;
           if (b !== btn) b.style.opacity = '0.25';
@@ -132,7 +136,9 @@ const UI = {
       if (response.locked) {
         btn.disabled = true;
       } else {
+        btn.addEventListener('mouseenter', () => SFX.hover());
         btn.addEventListener('click', () => {
+          SFX.select();
           this.choicesEl.querySelectorAll('.choice-btn').forEach(b => {
             b.disabled = true;
             if (b !== btn) b.style.opacity = '0.15';
@@ -143,6 +149,214 @@ const UI = {
       }
       this.choicesEl.appendChild(btn);
     });
+    const main = document.querySelector('main');
+    main.scrollTop = main.scrollHeight;
+  },
+
+  // ─── Panic Attack Rendering ───
+
+  async showPanicOnset(onset) {
+    this.clear();
+    const app = document.getElementById('app');
+    app.classList.add('panic-mode');
+
+    for (const line of onset.lines) {
+      const p = document.createElement('p');
+      p.className = line.css;
+      this.narrativeEl.appendChild(p);
+
+      if (line.css === 'panic-frag') {
+        p.style.opacity = '1';
+        p.style.animation = 'none';
+        for (let i = 0; i < line.text.length; i++) {
+          p.textContent += line.text[i];
+          await sleep(25 + Math.random() * 40);
+        }
+        await sleep(line.delay);
+      } else if (line.css === 'panic-lynch') {
+        p.style.opacity = '0';
+        p.textContent = line.text;
+        await sleep(200);
+        p.style.transition = 'opacity 0.6s';
+        p.style.opacity = '1';
+        await sleep(line.delay);
+      } else {
+        p.style.opacity = '1';
+        p.style.animation = 'none';
+        for (let i = 0; i < line.text.length; i++) {
+          p.textContent += line.text[i];
+          await sleep(15 + Math.random() * 20);
+        }
+        await sleep(line.delay);
+      }
+
+      const main = document.querySelector('main');
+      main.scrollTop = main.scrollHeight;
+    }
+  },
+
+  showPanicSpiral(round, onSelect) {
+    this.choicesEl.innerHTML = '';
+    this.actionEl.innerHTML = '';
+    let resolved = false;
+
+    const label = document.createElement('div');
+    label.className = 'panic-spiral-label';
+    label.textContent = round.label;
+    this.choicesEl.appendChild(label);
+
+    const timerWrap = document.createElement('div');
+    timerWrap.className = 'micro-timer-wrap panic-timer';
+    const timerBar = document.createElement('div');
+    timerBar.className = 'micro-timer-bar panic-timer-bar';
+    timerBar.style.animationDuration = round.timerMs + 'ms';
+    timerWrap.appendChild(timerBar);
+    this.choicesEl.appendChild(timerWrap);
+
+    const grid = document.createElement('div');
+    grid.className = 'panic-thoughts-grid';
+
+    round.thoughts.forEach((thought, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'panic-btn';
+      if (thought.recovery >= 3) btn.classList.add('panic-btn-anchor');
+      else if (thought.recovery <= -1) btn.classList.add('panic-btn-spiral');
+      else btn.classList.add('panic-btn-neutral');
+
+      btn.textContent = thought.text;
+      btn.style.animationDelay = (50 + idx * 60) + 'ms';
+
+      btn.addEventListener('click', () => {
+        if (resolved) return;
+        resolved = true;
+        SFX.select();
+        grid.querySelectorAll('.panic-btn').forEach(b => {
+          b.disabled = true;
+          if (b !== btn) b.classList.add('micro-faded');
+        });
+        btn.classList.add('micro-chosen');
+        setTimeout(() => onSelect(thought), 300);
+      });
+
+      grid.appendChild(btn);
+    });
+
+    this.choicesEl.appendChild(grid);
+
+    setTimeout(() => {
+      if (resolved) return;
+      resolved = true;
+      const worst = round.thoughts.reduce((a, b) => a.recovery < b.recovery ? a : b);
+      const worstBtn = [...grid.children].find(b => b.textContent === worst.text);
+      grid.querySelectorAll('.panic-btn').forEach(b => {
+        b.disabled = true;
+        if (b !== worstBtn) b.classList.add('micro-faded');
+      });
+      if (worstBtn) {
+        worstBtn.classList.add('micro-chosen', 'micro-random');
+      }
+      setTimeout(() => onSelect(worst, true), 300);
+    }, round.timerMs);
+
+    const main = document.querySelector('main');
+    main.scrollTop = main.scrollHeight;
+  },
+
+  async showPanicVoid(voidData, onSelect) {
+    this.choicesEl.innerHTML = '';
+    this.actionEl.innerHTML = '';
+    this.narrativeEl.innerHTML = '';
+
+    for (const line of voidData.passage) {
+      const p = document.createElement('p');
+      p.className = 'panic-void-line';
+      p.style.opacity = '0';
+      p.textContent = line;
+      this.narrativeEl.appendChild(p);
+      await sleep(150);
+      p.style.transition = 'opacity 0.8s';
+      p.style.opacity = '1';
+      await sleep(600 + line.length * 12);
+      const main = document.querySelector('main');
+      main.scrollTop = main.scrollHeight;
+    }
+
+    await sleep(800);
+
+    const grid = document.createElement('div');
+    grid.className = 'panic-void-choices';
+
+    voidData.choices.forEach((choice) => {
+      const btn = document.createElement('button');
+      btn.className = 'panic-void-btn';
+      if (choice.effect === 'ground') btn.classList.add('panic-void-ground');
+      else btn.classList.add('panic-void-dissociate');
+
+      btn.innerHTML = `<span class="panic-void-label">${choice.label}</span>${choice.text}`;
+
+      btn.addEventListener('mouseenter', () => SFX.hover());
+      btn.addEventListener('click', () => {
+        SFX.select();
+        grid.querySelectorAll('.panic-void-btn').forEach(b => {
+          b.disabled = true;
+          if (b !== btn) b.style.opacity = '0.1';
+        });
+        btn.classList.add('strategy-chosen');
+        setTimeout(() => onSelect(choice), 500);
+      });
+
+      grid.appendChild(btn);
+    });
+
+    this.choicesEl.appendChild(grid);
+    const main = document.querySelector('main');
+    main.scrollTop = main.scrollHeight;
+  },
+
+  endPanicMode() {
+    const app = document.getElementById('app');
+    app.classList.remove('panic-mode');
+  },
+
+  // ─── Shot Strategy Selection ───
+  showShotStrategy(safeLabel, safeDesc, aggrLabel, aggrDesc, onSelect) {
+    this.choicesEl.innerHTML = '';
+    this.actionEl.innerHTML = '';
+
+    const label = document.createElement('div');
+    label.className = 'strategy-label';
+    label.textContent = 'HOW DO YOU PLAY IT?';
+    this.choicesEl.appendChild(label);
+
+    const grid = document.createElement('div');
+    grid.className = 'strategy-grid';
+
+    const safeBtn = document.createElement('button');
+    safeBtn.className = 'strategy-btn strategy-safe';
+    safeBtn.innerHTML = `<span class="strategy-name">${safeLabel}</span><span class="strategy-desc">${safeDesc}</span>`;
+
+    const aggrBtn = document.createElement('button');
+    aggrBtn.className = 'strategy-btn strategy-aggressive';
+    aggrBtn.innerHTML = `<span class="strategy-name">${aggrLabel}</span><span class="strategy-desc">${aggrDesc}</span>`;
+
+    const resolve = (btn, other, choice) => {
+      SFX.select();
+      btn.classList.add('strategy-chosen');
+      other.classList.add('strategy-faded');
+      other.disabled = true;
+      btn.disabled = true;
+      setTimeout(() => onSelect(choice), 400);
+    };
+
+    safeBtn.addEventListener('mouseenter', () => SFX.hover());
+    aggrBtn.addEventListener('mouseenter', () => SFX.hover());
+    safeBtn.addEventListener('click', () => resolve(safeBtn, aggrBtn, 'safe'));
+    aggrBtn.addEventListener('click', () => resolve(aggrBtn, safeBtn, 'aggressive'));
+
+    grid.appendChild(safeBtn);
+    grid.appendChild(aggrBtn);
+    this.choicesEl.appendChild(grid);
+
     const main = document.querySelector('main');
     main.scrollTop = main.scrollHeight;
   },
@@ -185,9 +399,11 @@ const UI = {
       // Stagger appearance
       btn.style.animationDelay = (100 + idx * 120) + 'ms';
 
+      btn.addEventListener('mouseenter', () => SFX.hover());
       btn.addEventListener('click', () => {
         if (resolved) return;
         resolved = true;
+        SFX.select();
         this._resolveMicroPick(btnContainer, btn, thought, onSelect);
       });
 
@@ -240,7 +456,7 @@ const UI = {
     if (response.partnerEffect?.impression) {
       const d = response.partnerEffect.impression;
       const cls = d > 0 ? 'effect-positive' : 'effect-negative';
-      parts.push(`<span class="${cls}">DAVE ${d > 0 ? '+' : ''}${d}</span>`);
+      parts.push(`<span class="${cls}">MARTIN ${d > 0 ? '+' : ''}${d}</span>`);
     }
     if (response.shotModifier) {
       const d = response.shotModifier;
@@ -253,14 +469,18 @@ const UI = {
 
   async showSpeakerText(speaker, text, delayMs = 20) {
     const speakerLabels = {
-      dave: 'DAVE',
+      martin: 'MARTIN',
+      claire: 'CLAIRE',
+      sato: 'SATO',
       narrator: null,
       thought: 'YOUR MIND',
       you: 'YOU',
     };
 
     const speakerClasses = {
-      dave: 'dialogue-dave',
+      martin: 'dialogue-martin',
+      claire: 'dialogue-claire',
+      sato: 'dialogue-sato',
       narrator: 'dialogue-narrator',
       thought: 'thought',
       you: 'dialogue-you',
@@ -293,7 +513,9 @@ const UI = {
     const btn = document.createElement('button');
     btn.className = `action-btn ${cssClass}`;
     btn.textContent = text;
+    btn.addEventListener('mouseenter', () => SFX.hover());
     btn.addEventListener('click', () => {
+      SFX.confirm();
       btn.disabled = true;
       onClick();
     });
@@ -447,14 +669,13 @@ const UI = {
     traitsHTML += `</div>`;
     el.innerHTML += traitsHTML;
 
-    // ─── Dave Impression ───
     const imp = state.partner.impression;
     const mood = getPartnerMood(imp);
-    const moodLabels = { great: 'BEST FRIENDS', good: 'WARMING UP', neutral: 'ACQUAINTANCES', annoyed: 'FROSTY', cold: 'FROZEN OUT' };
+    const moodLabels = { great: 'INNER CIRCLE', good: 'WARMING UP', neutral: 'ACQUAINTANCES', annoyed: 'FROSTY', cold: 'FROZEN OUT' };
     el.innerHTML += `
       <div class="cs-section">
-        <div class="cs-section-title">DAVE — ${moodLabels[mood] || 'UNKNOWN'}</div>
-        <div class="cs-bar-track cs-dave-bar">
+        <div class="cs-section-title">MARTIN — ${moodLabels[mood] || 'UNKNOWN'}</div>
+        <div class="cs-bar-track cs-martin-bar">
           <div class="cs-bar-fill" style="width:${imp}%; background:var(--blue)"></div>
         </div>
         <div class="cs-trait-desc">Impression: ${imp}/100</div>
@@ -587,7 +808,9 @@ const UI = {
     panel.innerHTML = html;
 
     panel.querySelectorAll('.pu-perk-card').forEach(btn => {
+      btn.addEventListener('mouseenter', () => SFX.hover());
       btn.addEventListener('click', () => {
+        SFX.perkUnlock();
         const perkId = btn.dataset.perkId;
         const perk = opts.perks.find(p => p.id === perkId);
         panel.querySelectorAll('.pu-perk-card').forEach(b => {

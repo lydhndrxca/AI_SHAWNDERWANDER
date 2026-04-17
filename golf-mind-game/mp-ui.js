@@ -10,7 +10,7 @@ const MP_UI = {
     clubhouse: [
       { id: 'greet_hey', label: 'SAY HI', text: 'Hey, good to meet you out here.' },
       { id: 'greet_playing_well', label: 'COMPLIMENT', text: 'Looks like you\'re playing well today.' },
-      { id: 'club_cheers', label: 'CHEERS', text: 'Cheers — to a great day at Pebble Beach.' },
+      { id: 'club_cheers', label: 'CHEERS', text: 'Cheers — to a great day at Fujo.' },
       { id: 'club_rematch', label: 'REMATCH', text: 'Same time next week?' },
     ],
     passing: [
@@ -23,7 +23,7 @@ const MP_UI = {
       { id: 'greet_hey', label: 'SAY HI', text: 'Hey, good to meet you out here.' },
       { id: 'golf_club_advice', label: 'CLUB ADVICE', text: 'I\'d go with one more club here.' },
       { id: 'golf_read_green', label: 'READ THE GREEN', text: 'I think it breaks more than it looks.' },
-      { id: 'joke_after_bad_shot', label: 'JOKE', text: 'Hey, at least the ocean didn\'t get it.' },
+      { id: 'joke_after_bad_shot', label: 'JOKE', text: 'Hey, at least the koi pond didn\'t get it.' },
       { id: 'comp_trash_talk', label: 'TRASH TALK', text: 'Nice shot. Mine was better though.' },
       { id: 'enc_tough_hole', label: 'ENCOURAGE', text: 'Shake it off. Plenty of holes left.' },
     ],
