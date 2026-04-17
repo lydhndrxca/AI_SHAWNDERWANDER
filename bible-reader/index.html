@@ -16,7 +16,10 @@
   <div id="library" class="screen active">
     <header class="lib-header">
       <h1 class="lib-title">Bible Reader</h1>
-      <button id="btn-jesus-mode" class="jesus-toggle" aria-label="Words of Jesus mode">Words of Jesus</button>
+      <div class="lib-toggles">
+        <button id="btn-jesus-mode" class="jesus-toggle" aria-label="Words of Jesus mode">Words of Jesus</button>
+        <button id="btn-argmap-mode" class="argmap-toggle" aria-label="Argument Map mode">Argument Map</button>
+      </div>
     </header>
     <div id="lib-scroll"></div>
   </div>
@@ -42,6 +45,7 @@
         <button id="jesus-next">&rsaquo;</button>
       </footer>
       <div id="jesus-progress"><div id="jesus-progress-fill"></div></div>
+      <div class="jesus-attribution">Based on traditional red-letter attribution</div>
     </div>
   </div>
 
@@ -50,6 +54,37 @@
     <button class="panel-close" data-panel="jesus-toc">&times;</button>
     <h2 class="panel-heading">Sections</h2>
     <div id="jesus-toc-list"></div>
+  </aside>
+
+  <!-- Argument Map Reader -->
+  <div id="argmap-view" class="screen">
+    <div id="argmap-reader">
+      <header id="argmap-header">
+        <div class="header-left">
+          <button id="argmap-btn-back" aria-label="Back">&larr;</button>
+          <span id="argmap-section-name"></span>
+        </div>
+        <span id="argmap-ref"></span>
+        <div class="header-right">
+          <button id="argmap-toc-btn" aria-label="Sections">&#9776;</button>
+        </div>
+      </header>
+      <div id="argmap-context"></div>
+      <main id="argmap-area"><div id="argmap-content"></div></main>
+      <footer id="argmap-footer">
+        <button id="argmap-prev" disabled>&lsaquo;</button>
+        <span id="argmap-num"></span>
+        <button id="argmap-next">&rsaquo;</button>
+      </footer>
+      <div id="argmap-progress"><div id="argmap-progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Argument Map TOC -->
+  <aside id="argmap-toc-panel" class="panel hidden">
+    <button class="panel-close" data-panel="argmap-toc">&times;</button>
+    <h2 class="panel-heading">Passages</h2>
+    <div id="argmap-toc-list"></div>
   </aside>
 
   <!-- Reader -->
@@ -99,6 +134,7 @@
 
   <!-- Data files -->
   <script src="jesus-words.js"></script>
+  <script src="argument-maps.js"></script>
   <script src="registry.js"></script>
   <script src="genesis.js"></script>
   <script src="books-pentateuch.js"></script>

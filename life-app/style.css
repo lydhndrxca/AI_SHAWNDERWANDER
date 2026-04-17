@@ -1,0 +1,349 @@
+/* ─── Reset ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #1a1a1e;
+  --surface: #26262c;
+  --surface-up: #2f2f36;
+  --text: #f0ede8;
+  --text-dim: #8a8690;
+  --radius: 20px;
+  --radius-sm: 14px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ─── Screen System ─── */
+
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  padding-top: env(safe-area-inset-top, 24px);
+  padding-bottom: env(safe-area-inset-bottom, 24px);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.screen.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* ═══════════════════════════════════════
+   HOME GRID
+   ═══════════════════════════════════════ */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 12px;
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.2s,
+              box-shadow 0.25s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, hsla(var(--hue), 60%, 60%, 0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.tile:active {
+  transform: scale(0.94);
+  background: var(--surface-up);
+}
+
+.tile-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.tile-label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+/* 5th tile spans full width */
+.home-grid .tile:nth-child(5) {
+  grid-column: 1 / -1;
+  padding: 22px;
+  flex-direction: row;
+  gap: 14px;
+}
+
+/* ═══════════════════════════════════════
+   JOKE PICKER
+   ═══════════════════════════════════════ */
+
+.pick-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.pick-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 28px;
+  background: var(--surface);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.2s;
+}
+
+.pick-card:active {
+  transform: scale(0.96);
+  background: var(--surface-up);
+}
+
+.pick-emoji {
+  font-size: 32px;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════
+   CARD VIEW
+   ═══════════════════════════════════════ */
+
+#card-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 0;
+}
+
+.card {
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.2s;
+  position: relative;
+}
+
+.card.swipe-out {
+  transform: translateX(-120%) rotate(-8deg);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.25s;
+}
+
+.card.swipe-in {
+  transform: translateX(60px);
+  opacity: 0;
+  transition: none;
+}
+
+#card-setup {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+#card-punch {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #e8c864;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.3s ease 0.05s;
+}
+
+#card-punch.visible {
+  max-height: 300px;
+  opacity: 1;
+}
+
+/* Single-text cards (starters, ice breakers, toasts) */
+.card.single #card-setup {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Would You Rather */
+.card.wyr-card {
+  gap: 0;
+}
+
+.wyr-option {
+  width: 100%;
+  padding: 24px 20px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 19px;
+  font-weight: 500;
+  text-align: center;
+  cursor: default;
+  line-height: 1.4;
+}
+
+.wyr-option:first-child {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.wyr-or {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 10px 0;
+}
+
+/* ─── Actions ─── */
+
+#card-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  padding-bottom: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.reveal-btn {
+  background: rgba(232, 200, 100, 0.12);
+  color: #e8c864;
+}
+
+.reveal-btn:active {
+  background: rgba(232, 200, 100, 0.2);
+}
+
+.next-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+}
+
+.next-btn:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.action-btn.hidden { display: none; }
+
+#card-counter {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  padding: 8px 0 4px;
+  opacity: 0.5;
+}
+
+/* ─── Back Button ─── */
+
+.back-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  top: max(16px, env(safe-area-inset-top, 16px));
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 8px 12px;
+  z-index: 10;
+  transition: color 0.2s;
+}
+
+.back-btn:active { color: var(--text); }
+
+/* ─── Utility ─── */
+
+@media (min-width: 500px) {
+  .home-grid { max-width: 380px; }
+  .tile { padding: 32px 16px; }
+  .tile-icon { font-size: 40px; }
+  .tile-label { font-size: 14px; }
+}
+
+@media (max-height: 600px) {
+  .tile { padding: 20px 10px; }
+  .card { padding: 24px 20px; min-height: 140px; }
+  #card-setup { font-size: 18px; }
+}

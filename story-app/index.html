@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1c1a20">
+  <title>Story Sherpa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;1,7..72,300;1,7..72,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Library -->
+  <div id="library" class="screen active">
+    <h1 class="lib-title">Story Sherpa</h1>
+    <p class="lib-sub">Pick a story. You tell it. We help.</p>
+    <div id="story-list"></div>
+  </div>
+
+  <!-- Story View -->
+  <div id="story-view" class="screen">
+    <header id="story-header">
+      <button id="btn-exit" aria-label="Exit">&times;</button>
+      <span id="page-indicator"></span>
+    </header>
+
+    <main id="story-page">
+      <!-- Read-aloud text -->
+      <div id="story-text"></div>
+
+      <!-- Prompt chip -->
+      <button id="prompt-chip">
+        <span id="prompt-label"></span>
+        <span id="prompt-arrow">&#9662;</span>
+      </button>
+
+      <!-- Expanded prompt -->
+      <div id="prompt-expand"></div>
+    </main>
+
+    <footer id="story-footer">
+      <button id="btn-back-page" aria-label="Previous" disabled>&lsaquo;</button>
+      <div id="progress-dots"></div>
+      <button id="btn-next-page" aria-label="Next">&rsaquo;</button>
+    </footer>
+  </div>
+
+  <script src="stories.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

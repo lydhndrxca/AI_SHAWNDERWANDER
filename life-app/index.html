@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a1a1e">
+  <title>Pocket</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Home -->
+  <div id="home" class="screen active">
+    <div class="home-grid">
+      <button class="tile" data-cat="jokes" style="--hue:35">
+        <span class="tile-icon">&#128514;</span>
+        <span class="tile-label">Jokes</span>
+      </button>
+      <button class="tile" data-cat="starters" style="--hue:210">
+        <span class="tile-icon">&#128172;</span>
+        <span class="tile-label">Starters</span>
+      </button>
+      <button class="tile" data-cat="wyr" style="--hue:320">
+        <span class="tile-icon">&#129300;</span>
+        <span class="tile-label">Would You Rather</span>
+      </button>
+      <button class="tile" data-cat="icebreakers" style="--hue:160">
+        <span class="tile-icon">&#129398;</span>
+        <span class="tile-label">Ice Breakers</span>
+      </button>
+      <button class="tile" data-cat="toasts" style="--hue:45">
+        <span class="tile-icon">&#127867;</span>
+        <span class="tile-label">Toasts</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Joke Mode Picker -->
+  <div id="joke-pick" class="screen">
+    <button class="back-btn" data-to="home">&larr;</button>
+    <div class="pick-grid">
+      <button class="pick-card kids" data-mode="kids">
+        <span class="pick-emoji">&#128118;</span>
+        <span>For Kids</span>
+      </button>
+      <button class="pick-card adults" data-mode="adults">
+        <span class="pick-emoji">&#127867;</span>
+        <span>For Adults</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Card View (jokes, starters, etc.) -->
+  <div id="card-view" class="screen">
+    <button class="back-btn" data-to="back">&larr;</button>
+    <div id="card-container">
+      <div id="card" class="card">
+        <div id="card-setup"></div>
+        <div id="card-punch"></div>
+      </div>
+    </div>
+    <div id="card-actions">
+      <button id="btn-reveal" class="action-btn reveal-btn">Reveal</button>
+      <button id="btn-next" class="action-btn next-btn">Next</button>
+    </div>
+    <div id="card-counter"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -327,13 +327,15 @@ html, body {
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes fadeSlow { from{opacity:0} to{opacity:0.5} }
 
-/* ═══════ JESUS MODE TOGGLE ═══════ */
+/* ═══════ MODE TOGGLES ═══════ */
 
 .lib-header {
   display: flex; justify-content: space-between; align-items: center;
 }
 
-.jesus-toggle {
+.lib-toggles { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+.jesus-toggle, .argmap-toggle {
   font-family: 'Source Serif 4', Georgia, serif;
   font-size: 10px; font-weight: 600;
   letter-spacing: 2px; text-transform: uppercase;
@@ -347,6 +349,13 @@ html, body {
 }
 .jesus-toggle.active {
   color: #fff; background: #8b2020; border-color: #8b2020;
+}
+
+.argmap-toggle:hover {
+  color: #3d5a80; border-color: #3d5a80;
+}
+.argmap-toggle.active {
+  color: #fff; background: #3d5a80; border-color: #3d5a80;
 }
 
 /* ═══════ JESUS READER ═══════ */
@@ -480,6 +489,236 @@ html, body {
   margin-top: 2px;
 }
 
+/* ═══════ JESUS ATTRIBUTION ═══════ */
+
+.jesus-attribution {
+  text-align: center; font-size: 10px; font-style: italic;
+  color: var(--ink-faint); padding: 4px 24px 10px;
+  letter-spacing: 0.5px; flex-shrink: 0;
+}
+
+/* ═══════ ARGUMENT MAP READER ═══════ */
+
+#argmap-view { background: #f4efe4; }
+
+#argmap-reader {
+  max-width: var(--page-max);
+  margin: 0 auto; height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--cream);
+  box-shadow: 0 0 60px rgba(0,0,0,0.06);
+}
+
+#argmap-header {
+  padding: 16px 24px 8px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0; gap: 12px;
+}
+
+#argmap-header .header-left,
+#argmap-header .header-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+#argmap-btn-back, #argmap-toc-btn {
+  font-family: inherit; font-size: 16px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 2px 6px;
+}
+#argmap-btn-back:hover, #argmap-toc-btn:hover { color: #3d5a80; }
+
+#argmap-section-name {
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+#argmap-ref {
+  font-size: 12px; color: var(--ink-light);
+  text-align: center; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+#argmap-context {
+  padding: 0 36px 12px;
+  font-size: 13px; line-height: 1.6;
+  color: var(--ink-light); font-style: italic;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  opacity: 0; animation: fadeUp 0.5s ease forwards;
+}
+
+#argmap-area {
+  flex: 1; display: flex;
+  align-items: flex-start; justify-content: center;
+  padding: 20px 24px;
+  overflow-y: auto; scrollbar-width: none;
+}
+#argmap-area::-webkit-scrollbar { display: none; }
+
+#argmap-content {
+  max-width: 100%; width: 100%;
+  transition: opacity 0.25s ease;
+}
+
+/* ── Node types ── */
+
+.argmap-flow { padding: 0 0 40px; opacity: 0; animation: fadeUp 0.5s ease forwards; }
+
+.argmap-node {
+  position: relative;
+  border-left: 3px solid var(--ink-faint);
+  border-radius: 4px;
+  padding: 10px 14px 10px 16px;
+  margin-bottom: 2px;
+  background: rgba(0,0,0,0.015);
+  transition: background 0.2s;
+}
+.argmap-node:hover { background: rgba(0,0,0,0.03); }
+
+.argmap-node[data-depth="1"] { margin-left: 22px; }
+.argmap-node[data-depth="2"] { margin-left: 44px; }
+.argmap-node[data-depth="3"] { margin-left: 66px; }
+
+.argmap-connector {
+  height: 12px; position: relative;
+}
+.argmap-connector[data-depth="0"] { margin-left: 1px; }
+.argmap-connector[data-depth="1"] { margin-left: 23px; }
+.argmap-connector[data-depth="2"] { margin-left: 45px; }
+.argmap-connector[data-depth="3"] { margin-left: 67px; }
+.argmap-connector::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 1px;
+  background: var(--ink-faint); opacity: 0.25;
+}
+.argmap-connector::after {
+  content: ''; position: absolute;
+  left: -2px; top: 50%; width: 5px; height: 5px;
+  border-radius: 50%; background: var(--ink-faint); opacity: 0.3;
+  transform: translateY(-50%);
+}
+
+.argmap-keyword {
+  display: inline-block; font-size: 9px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 3px; opacity: 0.85;
+}
+
+.argmap-verse-ref {
+  font-size: 10px; font-weight: 600;
+  vertical-align: super; margin-right: 4px; opacity: 0.5;
+}
+
+.argmap-text { font-size: 15px; line-height: 1.75; font-weight: 300; }
+
+/* type colors */
+.argmap-node.type-claim        { border-left-color: #3d5a80; }
+.argmap-node.type-claim .argmap-keyword { color: #3d5a80; }
+.argmap-node.type-claim .argmap-verse-ref { color: #3d5a80; }
+
+.argmap-node.type-ground       { border-left-color: #5e8c61; }
+.argmap-node.type-ground .argmap-keyword { color: #5e8c61; }
+.argmap-node.type-ground .argmap-verse-ref { color: #5e8c61; }
+
+.argmap-node.type-inference    { border-left-color: #8b6f4e; }
+.argmap-node.type-inference .argmap-keyword { color: #8b6f4e; }
+.argmap-node.type-inference .argmap-verse-ref { color: #8b6f4e; }
+
+.argmap-node.type-condition    { border-left-color: #9b7fb8; }
+.argmap-node.type-condition .argmap-keyword { color: #9b7fb8; }
+.argmap-node.type-condition .argmap-verse-ref { color: #9b7fb8; }
+
+.argmap-node.type-result       { border-left-color: #9b7fb8; }
+.argmap-node.type-result .argmap-keyword { color: #9b7fb8; }
+.argmap-node.type-result .argmap-verse-ref { color: #9b7fb8; }
+
+.argmap-node.type-contrast     { border-left-color: #c17b4a; }
+.argmap-node.type-contrast .argmap-keyword { color: #c17b4a; }
+.argmap-node.type-contrast .argmap-verse-ref { color: #c17b4a; }
+
+.argmap-node.type-exhortation  { border-left-color: #8b2020; }
+.argmap-node.type-exhortation .argmap-keyword { color: #8b2020; }
+.argmap-node.type-exhortation .argmap-verse-ref { color: #8b2020; }
+
+.argmap-node.type-question     { border-left-color: #6b8fa3; }
+.argmap-node.type-question .argmap-keyword { color: #6b8fa3; }
+.argmap-node.type-question .argmap-verse-ref { color: #6b8fa3; }
+
+.argmap-node.type-answer       { border-left-color: #6b8fa3; }
+.argmap-node.type-answer .argmap-keyword { color: #6b8fa3; }
+.argmap-node.type-answer .argmap-verse-ref { color: #6b8fa3; }
+
+/* ── Argmap legend ── */
+
+.argmap-legend {
+  display: flex; flex-wrap: wrap; gap: 8px 14px;
+  padding: 0 0 16px; opacity: 0;
+  animation: fadeSlow 0.8s ease 0.3s forwards;
+}
+
+.argmap-legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 9px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+
+.argmap-legend-swatch {
+  width: 12px; height: 3px; border-radius: 2px; flex-shrink: 0;
+}
+
+/* ── Footer / nav ── */
+
+#argmap-footer {
+  padding: 8px 24px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+
+#argmap-footer button {
+  font-family: inherit; font-size: 26px;
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer;
+  padding: 4px 14px; transition: color 0.2s;
+}
+#argmap-footer button:hover:not(:disabled) { color: #3d5a80; }
+#argmap-footer button:disabled { opacity: 0.15; cursor: default; }
+
+#argmap-num { font-size: 11px; color: var(--ink-faint); letter-spacing: 1px; }
+
+#argmap-progress { height: 2px; background: var(--cream-dark); flex-shrink: 0; }
+#argmap-progress-fill {
+  height: 100%; background: #3d5a80; opacity: 0.3;
+  transition: width var(--tr); width: 0;
+}
+
+/* ── Argmap TOC ── */
+
+#argmap-toc-panel { left: 0; box-shadow: 4px 0 30px rgba(0,0,0,0.08); transform: translateX(-100%); }
+#argmap-toc-panel.visible { transform: translateX(0); }
+
+.argmap-toc-section {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #3d5a80; padding: 16px 0 6px;
+}
+.argmap-toc-section:first-child { padding-top: 0; }
+
+.argmap-toc-item {
+  padding: 8px 8px; font-size: 13px;
+  color: var(--ink-light); cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: color 0.15s;
+}
+.argmap-toc-item:hover { color: #3d5a80; }
+
+.argmap-toc-context {
+  display: block; font-size: 10px;
+  color: var(--ink-faint); font-style: italic;
+  margin-top: 2px;
+}
+
 @media(max-width:700px) {
   #book-header{padding:12px 16px 6px}
   #page-area{padding:16px 20px}
@@ -492,4 +731,16 @@ html, body {
   #jesus-area{padding:16px 20px}
   #jesus-context{padding:0 20px 10px}
   .jesus-verse{font-size:15px}
+  #argmap-header{padding:12px 16px 6px}
+  #argmap-area{padding:16px 14px}
+  #argmap-context{padding:0 20px 10px}
+  .argmap-text{font-size:14px}
+  .argmap-node[data-depth="1"]{margin-left:16px}
+  .argmap-node[data-depth="2"]{margin-left:32px}
+  .argmap-node[data-depth="3"]{margin-left:48px}
+  .argmap-connector[data-depth="1"]{margin-left:17px}
+  .argmap-connector[data-depth="2"]{margin-left:33px}
+  .argmap-connector[data-depth="3"]{margin-left:49px}
+  .lib-toggles{gap:6px}
+  .jesus-toggle,.argmap-toggle{font-size:9px;padding:4px 10px}
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ideation Station</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="rain"></canvas>
+
+  <header id="site-header">
+    <h1 class="site-title">IDEATION STATION</h1>
+    <p class="site-sub">brainstorm pipeline tracker</p>
+  </header>
+
+  <main id="card-grid"></main>
+
+  <!-- Expanded detail overlay -->
+  <div id="detail-overlay" class="hidden">
+    <div id="detail-panel">
+      <button id="detail-close">&times;</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
