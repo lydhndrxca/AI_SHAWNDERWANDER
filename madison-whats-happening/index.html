@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's Happening — Madison WI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg: #0f1014;
+      --surface: #191920;
+      --surface-hover: #21212a;
+      --border: #2a2a34;
+      --border-light: #33333e;
+      --text: #d4d4da;
+      --text-dim: #8e8e9a;
+      --text-bright: #f0f0f4;
+      --accent: #7b68ee;
+      --accent-dim: #5a4abf;
+      --green: #44d98c;
+      --amber: #e8b84a;
+      --blue: #5ba8e8;
+      --red: #e86060;
+      --pink: #e870a0;
+      --cyan: #50c8c8;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 100px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    /* ── Header ── */
+
+    h1 {
+      font-family: var(--sans);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .updated {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      opacity: 0.5;
+      letter-spacing: 1px;
+    }
+
+    /* ── Filters ── */
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-light);
+      color: var(--text);
+      background: var(--surface-hover);
+    }
+
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(123, 104, 238, 0.1);
+    }
+
+    .filter-btn-saved {
+      border-color: rgba(232, 184, 74, 0.3);
+      color: var(--amber) !important;
+    }
+
+    .filter-btn-saved.active {
+      border-color: var(--amber);
+      background: rgba(232, 184, 74, 0.1);
+    }
+
+    /* ── Start Here ── */
+
+    .start-here {
+      margin-bottom: 32px;
+    }
+
+    .zone-label {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zone-label-amber { color: var(--amber); }
+    .zone-label-green { color: var(--green); }
+
+    .zone-label-green::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .sh-card {
+      display: block;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .sh-card:hover {
+      border-color: var(--amber);
+      background: var(--surface-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .sh-card:visited { color: inherit; }
+    .sh-card:visited .sh-name { opacity: 0.65; }
+
+    .sh-name {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+
+    .sh-detail {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .sh-vibe {
+      color: var(--text);
+      opacity: 0.75;
+      font-style: italic;
+    }
+
+    .sh-cta {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+      margin-top: 12px;
+      opacity: 0.8;
+    }
+
+    .sh-card:hover .sh-cta { opacity: 1; }
+
+    /* ── Every Week ── */
+
+    .every-week {
+      margin-bottom: 40px;
+    }
+
+    .ew-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .ew-day-header {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+      padding: 16px 0 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
+    }
+
+    .ew-day-header:first-child {
+      padding-top: 4px;
+    }
+
+    .ew-day-header:hover {
+      color: var(--text);
+    }
+
+    .ew-day-header .day-toggle {
+      font-size: 11px;
+      color: var(--text-dim);
+      opacity: 0.5;
+      transition: transform 0.2s, opacity 0.15s;
+    }
+
+    .ew-day-header:hover .day-toggle { opacity: 0.8; }
+
+    .ew-day-header.collapsed .day-toggle {
+      transform: rotate(-90deg);
+    }
+
+    .ew-day-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-bottom: 4px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
+    }
+
+    .ew-day-group.collapsed {
+      max-height: 0 !important;
+      opacity: 0;
+      padding-bottom: 0;
+    }
+
+    .ew-card {
+      display: block;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .ew-card:hover {
+      border-color: var(--green);
+      background: var(--surface-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .ew-card:visited { color: inherit; }
+    .ew-card:visited .ew-name { opacity: 0.65; }
+
+    .ew-top {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .ew-cost {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .ew-cost-free {
+      color: var(--green);
+      background: rgba(68, 217, 140, 0.1);
+    }
+
+    .ew-cost-paid {
+      color: var(--amber);
+      background: rgba(232, 184, 74, 0.1);
+    }
+
+    .ew-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-bright);
+    }
+
+    .ew-detail {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 4px;
+      line-height: 1.6;
+    }
+
+    .ew-detail .ew-vibe {
+      color: var(--text);
+      opacity: 0.75;
+      font-style: italic;
+    }
+
+    /* ── Zone Divider ── */
+
+    .zone-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .zone-divider span {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      white-space: nowrap;
+      opacity: 0.7;
+    }
+
+    .zone-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Sections ── */
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon { font-size: 20px; }
+
+    .section-title {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .section-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-left: auto;
+      opacity: 0.5;
+    }
+
+    /* ── Cards ── */
+
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card {
+      display: block;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      border-color: var(--border-light);
+      background: var(--surface-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .card:visited { color: inherit; }
+    .card:visited .card-name { opacity: 0.65; }
+    .card:visited .card-desc { opacity: 0.6; }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .card-name {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--text-bright);
+      transition: opacity 0.15s;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .tag {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border: 1px solid;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .tag-art { color: var(--pink); border-color: rgba(232, 112, 160, 0.25); }
+    .tag-making { color: var(--amber); border-color: rgba(232, 184, 74, 0.25); }
+    .tag-sports { color: var(--green); border-color: rgba(68, 217, 140, 0.25); }
+    .tag-music { color: var(--blue); border-color: rgba(91, 168, 232, 0.25); }
+    .tag-tech { color: var(--accent); border-color: rgba(123, 104, 238, 0.25); }
+    .tag-social { color: var(--cyan); border-color: rgba(80, 200, 200, 0.25); }
+    .tag-dance { color: var(--red); border-color: rgba(232, 96, 96, 0.25); }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      transition: opacity 0.15s;
+    }
+
+    .card-vibe {
+      font-size: 13px;
+      color: var(--text);
+      opacity: 0.75;
+      font-style: italic;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      transition: opacity 0.15s;
+    }
+
+    .card-meta {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .card-meta span { white-space: nowrap; }
+
+    .cta {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    .card:hover .cta, .ew-card:hover .cta { opacity: 1; }
+
+    .filter-result-count {
+      font-size: 12px;
+      color: var(--text-dim);
+      opacity: 0.6;
+      margin-bottom: 16px;
+    }
+
+    /* ── Card Actions (Fav + Dismiss) ── */
+
+    .card-wrap {
+      position: relative;
+    }
+
+    .card-actions {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 4px;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.15s;
+      pointer-events: none;
+    }
+
+    .card-wrap:hover .card-actions { opacity: 1; }
+    .card-wrap.is-fav .card-actions { opacity: 0.5; }
+    .card-wrap.is-fav:hover .card-actions { opacity: 1; }
+
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      transition: all 0.15s;
+      user-select: none;
+      pointer-events: auto;
+    }
+
+    .fav-btn:hover { color: var(--amber); border-color: var(--amber); }
+
+    .fav-btn.is-fav {
+      color: var(--amber);
+      border-color: var(--amber);
+      background: rgba(232, 184, 74, 0.1);
+    }
+
+    .dismiss-btn:hover { color: var(--red); border-color: var(--red); }
+
+    .hidden-count {
+      font-size: 12px;
+      color: var(--text-dim);
+      opacity: 0.4;
+      text-align: center;
+      padding: 24px 0;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .hidden-count:hover { opacity: 0.8; color: var(--red); }
+
+    .empty-state {
+      font-size: 13px;
+      color: var(--text-dim);
+      text-align: center;
+      padding: 48px 20px;
+      opacity: 0.6;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ── Mobile ── */
+
+    @media (max-width: 600px) {
+      .container { padding: 32px 16px 64px; }
+      h1 { font-size: 22px; }
+      .card-top { flex-direction: column; gap: 8px; }
+      .card-tags { flex-wrap: wrap; }
+      .card-actions { opacity: 0.5; }
+      .card-wrap.is-fav .card-actions { opacity: 0.6; }
+      .ew-card { padding: 14px 16px; }
+      .card { padding: 14px 16px; }
+      .sh-card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-row">
+      <h1><span>What's Happening</span></h1>
+      <span class="updated">MADISON WI</span>
+    </div>
+    <p class="subtitle">Art, music, making, sports, tech, and people worth knowing.</p>
+
+    <div class="filters" id="filters"></div>
+
+    <div id="start-here-zone"></div>
+    <div id="every-week-zone"></div>
+    <div id="sections"></div>
+    <div id="hidden-zone"></div>
+  </div>
+
+  <script>
+    const STORE = {
+      _get(k) { try { return JSON.parse(localStorage.getItem(k)) || []; } catch { return []; } },
+      _set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
+      get favs() { return this._get('wh-favs'); },
+      get dismissed() { return this._get('wh-dismissed'); },
+      isFav(n) { return this.favs.includes(n); },
+      isDismissed(n) { return this.dismissed.includes(n); },
+      toggleFav(n) {
+        const f = this.favs;
+        const i = f.indexOf(n);
+        if (i >= 0) f.splice(i, 1); else f.push(n);
+        this._set('wh-favs', f);
+      },
+      dismiss(n) {
+        const d = this.dismissed;
+        if (!d.includes(n)) d.push(n);
+        this._set('wh-dismissed', d);
+        const f = this.favs;
+        const i = f.indexOf(n);
+        if (i >= 0) { f.splice(i, 1); this._set('wh-favs', f); }
+      },
+      restoreAll() { this._set('wh-dismissed', []); },
+    };
+
+    const START_HERE = {
+      name: '30/40 Somethings — Madison Meetup',
+      desc: '1,500+ members. Concerts, happy hours, game nights, hiking, lake days, volunteering. Multiple events every week.',
+      vibe: 'This is the big one. Everyone\'s in the same boat — just show up to anything.',
+      tags: ['social'],
+      url: 'https://www.meetup.com/30-40-somethings-madison/',
+    };
+
+    const EVERY_WEEK = [
+      { day: 'MON', name: 'Madtown Monday — Social Bike Ride', cost: 'FREE', detail: '6pm. Party pace (10-12 mph), 12-18 miles. 📍 Orton Park', vibe: 'Post-ride hangout at a local bar. Come for the smiles and the miles.', url: 'https://www.capcitycyclists.com/mad-town-mondays', tags: ['sports', 'social'] },
+      { day: 'MON', name: 'D&D Adventurers League — Noble Knight', cost: 'FREE', detail: '6pm (muster 5:30). Walk-ins welcome, RSVP Meetup preferred. 📍 2835 Commerce Park Dr, Fitchburg', vibe: '3,200+ members. New players get a character in 10 minutes — just show up.', url: 'https://www.meetup.com/MadDnD/', tags: ['social'] },
+      { day: 'MON', name: 'Monday Trivia — Schwoegler\'s', cost: 'FREE', detail: '6:45pm via Madison Random Fun. 📍 444 Grand Canyon Dr', vibe: 'Team trivia via WI Premier Trivia. Solo players join a table — everyone does.', url: 'https://www.meetup.com/madison-random-fun-meetup/', tags: ['social'] },
+      { day: 'TUE', name: 'Bluegrass Jam — Goodman Center', cost: '$5', detail: '7-9pm. Bring an instrument and sit in. 📍 214 Waubesa St', vibe: 'All skill levels. People rotate in and out — zero pressure.', url: 'https://isthmus.com/events/bluegrass-jam-swbmai/', tags: ['music', 'social'] },
+      { day: 'TUE', name: 'Madison Run Club — Evening Run', cost: 'FREE', detail: '6:30pm. 4-5 miles, all paces. Post-run drinks. 📍 Brass Ring, 701 E Washington Ave', vibe: '1,926 members. Nobody runs alone — there\'s always someone at your pace.', url: 'https://www.meetup.com/madisonrunclub/', tags: ['sports', 'social'] },
+      { day: 'TUE', name: 'West Coast Swing — Social Dance', cost: '$5–10', detail: '6:15pm lesson + 7-9pm open dance. 📍 Dancesport, 6529 Normandy Ln', vibe: 'No partner needed — they rotate during class. Great music, chill crowd.', url: 'https://mwcsc.org/dance-events/weekly-dances/', tags: ['social', 'art'] },
+      { day: 'TUE', name: 'Communication Madison — Knit & Crochet Night', cost: 'FREE', detail: 'Drop-in every Tuesday. 📍 1741 Commercial Ave (Roundhouse Studios)', vibe: 'No pressure — make something next to other humans.', url: 'http://communicationmadison.com/', tags: ['art', 'social'] },
+      { day: 'WED', name: 'The Mic on State — Comedy Open Mic', cost: '$5', detail: '8pm. 20 comedians per week. Sign up online by 6pm. 📍 202 State St', vibe: 'Biggest open mic in the region. Half the crowd is other comics cheering you on.', url: 'https://www.madisoncomedy.com/open-mic/', tags: ['art', 'social'] },
+      { day: 'WED', name: 'Trivia Night — Brass Ring', cost: 'FREE', detail: '7pm. Gift certificates for winners. 📍 701 E Washington Ave', vibe: 'No team needed — solo players welcome. Visual questions on the TVs.', url: 'https://www.thebrassringmadison.com/trivia', tags: ['social'] },
+      { day: 'WED', name: 'Cafe CODA — Karaoke Night', cost: 'FREE', detail: '8-11pm. 📍 1224 Williamson St', vibe: 'Willy St dive bar energy. Everyone\'s terrible and having a blast.', url: 'https://www.cafecoda.club/events-1', tags: ['music', 'social'] },
+      { day: 'WED', name: 'Crucible — Karaoke Night', cost: 'FREE', detail: 'Doors 6pm, singing 6:30pm-1am. 21+. 📍 3112 Commercial Ave', vibe: 'Themed nights, rotating KJs. Half the crowd is just watching — low pressure.', url: 'https://www.cruciblemadison.com/calendar', tags: ['music', 'social'] },
+      { day: 'THU', name: 'Communication Madison — Paint Night', cost: 'FREE', detail: 'Drop-in every Thursday. 📍 1741 Commercial Ave (Roundhouse Studios)', vibe: 'Show up, paint, talk or don\'t.', url: 'http://communicationmadison.com/', tags: ['art', 'social'] },
+      { day: 'THU', name: 'Ecstatic Dance — Wil-Mar Center', cost: '$5–10', detail: '7:30-9pm. Suggested donation. 📍 953 Jenifer St', vibe: 'Free-form movement. Dance, walk, stretch, sit — whatever feels right.', url: 'http://www.wil-mar.org/weekly-events', tags: ['social', 'art'] },
+      { day: 'FRI', name: 'Board Games — Noble Knight', cost: 'FREE', detail: '5:30pm. Huge game library. 📍 2835 Commerce Park Dr, Fitchburg', vibe: '4,142-member meetup. Newcomers taught gladly — don\'t be shy.', url: 'https://www.meetup.com/madison-area-board-games-meetup/', tags: ['social'] },
+      { day: 'FRI', name: 'The Bodgery — Friday Open House', cost: 'FREE', detail: 'Public tours 1st & 3rd Fridays. Guests most Friday nights. 📍 740 Oscar Ave', vibe: '1,600 members. Walk in, see the shop, meet builders.', url: 'https://thebodgery.org/', tags: ['making', 'social'] },
+      { day: 'SAT', name: 'Dane County Farmers\' Market', cost: 'FREE', detail: '6:15am-1:45pm, Apr-Nov. 220+ vendors. 📍 Capitol Square', vibe: 'Largest producer-only market in the US. The Saturday ritual.', url: 'https://dcfm.org/', tags: ['social'] },
+      { day: 'SAT', name: '40+ Ultimate Frisbee Pickup', cost: 'FREE', detail: '10am. All skill levels. 📍 Olbrich Park, 3527 Atwood Ave', vibe: 'Informal, friendly, and nobody cares if you drop it.', url: 'https://mufa.org/?p=4', tags: ['sports', 'social'] },
+      { day: 'SAT', name: 'Saturday Morning Coffee', cost: 'FREE', detail: '9am at rotating coffee shops. 📍 Check Meetup for this week\'s spot', vibe: '1,012 members. Lowest-barrier social event in Madison — just show up and talk.', url: 'https://www.meetup.com/saturday-morning-coffee-madison/', tags: ['social'] },
+      { day: 'SAT', name: 'UW Arboretum — Restoration Work Party', cost: 'FREE', detail: '9am-noon. Tools, gloves & refreshments provided. 📍 UW Arboretum (locations rotate)', vibe: 'Make friends while pulling invasive species. Runs mid-Feb through mid-Dec.', url: 'https://arboretum.wisc.edu/get-involved/volunteer/work-parties/', tags: ['social'] },
+      { day: 'SUN', name: 'I/O Arcade — Kar-I/O-ke', cost: 'FREE', detail: '7pm. 70+ arcade games, board game room, cocktails. 21+. 📍 924 Williamson St', vibe: 'Sing badly, play games, drink something weird. Best solo Sunday in Madison.', url: 'https://ioarcade.bar/', tags: ['music', 'social'] },
+      { day: 'SUN', name: 'D&D Adventurers League — Gamer\'s Library', cost: 'FREE', detail: '10am. RSVP on Meetup for guaranteed seat. 📍 449 State St', vibe: 'Sunday morning D&D downtown. Pre-made characters available for new players.', url: 'https://www.meetup.com/MadDnD/', tags: ['social'] },
+      { day: 'SUN', name: 'Mickey\'s Tavern — Open Mic', cost: 'FREE', detail: '10pm. 📍 1524 Williamson St', vibe: 'Late-night Willy St institution. Bring whatever you\'ve got.', url: 'https://isthmus.com/events/open-mic-mickeys/', tags: ['music', 'social'] },
+    ];
+
+    const DATA = [
+      {
+        section: 'Meet People', icon: '👋',
+        items: [
+          { name: 'Delta Beer Lab — Speed Meeting', desc: 'Monthly friend-making event. Conversation prompts + rotation — like speed dating but for friendships.', vibe: 'Free. 2nd Thursday. Everyone\'s there for the same reason — to meet people.', tags: ['social'], when: '2nd Thursday monthly · 6-8:30pm', where: '167 E Badger Rd', url: 'https://delta.beer/events' },
+          { name: 'Madison Social Club', desc: '4,000+ members. Bourbon tastings, wine walks, social gatherings.', vibe: 'Events are structured so you don\'t stand around awkwardly.', tags: ['social'], when: 'Multiple events monthly', where: 'Various', url: 'https://www.meetup.com/madison-social-club/' },
+          { name: 'Madison Speed Dating — 30s/40s', desc: '6-minute rounds, up to 12 people per event. Lock & Key events too.', vibe: 'Everyone\'s nervous. That\'s the point. It\'s fast and surprisingly fun.', tags: ['social'], when: 'Monthly · Check site for next', where: 'Vintage Brewing / Seminole Tap', url: 'https://madisonspeeddate.com/' },
+          { name: 'MAOG — Madison Area Outdoor Group', desc: '882 members. Hiking, paddling, camping, bonfires, biking, skiing. $5 one-time dues.', vibe: 'Free 90-day trial. Events every week. Just pick one and go.', tags: ['social', 'sports'], when: 'Multiple events weekly', where: 'Various outdoor locations', url: 'https://www.meetup.com/madcityoutdoors/' },
+          { name: 'Never a Third Wheel', desc: '1,134 members, 4.7★. Singles-only group (ages 21-65). Trivia, cornhole, dance parties, mini golf, meet & greets.', vibe: 'Everyone here is single. No couples. No awkward third-wheeling — that\'s the whole point.', tags: ['social'], when: 'Multiple events weekly', where: 'Various Madison locations', url: 'https://www.meetup.com/no-third-wheel-singles-group/' },
+          { name: 'Madison After Dark', desc: '1,797 members. Mix & Mingle nights at Vintage Brewing draw 37+ people. Cocktail events, house parties.', vibe: 'Nightlife for people who actually want to meet someone — not just drink next to strangers.', tags: ['social'], when: 'Multiple events monthly', where: 'Vintage Brewing & various', url: 'https://www.meetup.com/madison-after-dark-meetup-group/' },
+          { name: 'Madison Random Fun!', desc: '3,647 members, 4.8★, 1,393 past events. Trivia Mon-Thu at different venues, movies, outings, random activities.', vibe: 'The "I don\'t know what I want to do" group. Something happening almost every day.', tags: ['social'], when: 'Almost daily', where: 'Various Madison locations', url: 'https://www.meetup.com/madison-random-fun-meetup/' },
+          { name: 'Forward Brotherhood — Open Men\'s Circle', desc: '717 members, 4.8★. Weekly men\'s circle capped at 12. Free/donation-based. Not therapy, not advice — just men being real.', vibe: 'Intimidating? Yes. Worth it? Also yes. RSVP required — spots fill fast.', tags: ['social'], when: 'Wednesdays · 6:45-8:45pm', where: 'Madison Public Library, 201 W Mifflin St', url: 'https://www.meetup.com/madison-open-mens-circle/' },
+          { name: 'Happy.Sober.Free', desc: '590 members, 4.8★. Alcohol-free social events — brunches, picnics, nature walks, game nights. All genders welcome.', vibe: 'Only rule: be sober that day. Zero judgment. Great people, no hangovers.', tags: ['social'], when: 'Multiple events monthly', where: 'Various Madison locations', url: 'https://www.meetup.com/happy-sober-free-alcohol-free-events-meet-ups/' },
+        ],
+      },
+      {
+        section: 'Comedy & Improv', icon: '🎭',
+        items: [
+          { name: 'Atlas Improv Co. — Free Drop-in Class', desc: 'Monthly Saturday improv class. 90 minutes, no registration, totally free.', vibe: 'You can just watch if you want. Low-pressure, low-judgment, close-toed shoes.', tags: ['art', 'social'], when: 'Monthly Saturdays · 3:30pm', where: '609 E Washington Ave', url: 'https://atlasimprov.crowdwork.com/classes/drop-in' },
+          { name: 'Atlas Improv Co. — Shows', desc: 'Improv shows Friday and Saturday nights. $10-15.', vibe: 'Local + touring performers. Small room, big laughs.', tags: ['art'], when: 'Fri & Sat · 7pm & 9pm', where: '609 E Washington Ave', url: 'https://atlasimprov.com/' },
+          { name: 'Amalgam Improv — Pay-What-You-Can Shows', desc: 'Independent improv teams. Longform comedy based on obscure film clips.', vibe: 'Weird in the best way. RSVP not required — just show up.', tags: ['art', 'social'], when: 'Check schedule', where: 'The Forward Club, 917 E Mifflin St', url: 'http://amalgamimprov.com/' },
+        ],
+      },
+      {
+        section: 'Make Music & Perform', icon: '🎸',
+        items: [
+          { name: 'Muso — Rehearsal, Jams & Open Mics', desc: 'Acoustic venue with weekly jams, monthly open mics, and rehearsal space. $100/yr.', vibe: 'Songwriters, pickers, and weirdos. You\'ll fit right in.', tags: ['music'], when: 'Open mics monthly · Jams weekly', where: '2040 Winnebago St', url: 'https://musomadison.com/' },
+          { name: 'Madison Music Foundry — Rehearsal Studios', desc: 'Professional rehearsal rooms with gear. Solo $15/hr, band rooms from $60.', vibe: 'Book a room, plug in, nobody bothers you.', tags: ['music'], when: 'M-Th 2-11pm · Sa 11-8 · Su 12-8', where: '2818 Index Rd, Fitchburg', url: 'https://madisonmusicfoundry.com/rehearsal-studio' },
+          { name: 'The Bur Oak — Open Mic Nights', desc: '15-minute slots, all abilities. Sign up 6pm, play at 7pm. Free.', vibe: 'Friendly crowd. Half the room is also performing solo for the first time.', tags: ['music', 'social'], when: 'Monthly (check site for next date)', where: 'The Bur Oak, Atwood Ave', url: 'https://www.theburoakmadison.com/' },
+          { name: 'Forward! Marching Band', desc: '~30-piece activist street band. Community-run, democratic, quirky as hell.', vibe: 'They\'ll hand you a part and teach you. No audition.', tags: ['music', 'social'], when: 'Ongoing rehearsals', where: 'Madison', url: 'https://forwardband.org/' },
+          { name: 'Cafe CODA — Live Jazz & Open Jams', desc: 'Jazz, salsa nights, open jams, and student sessions. The Willy St music hub.', vibe: 'Happy hour sets are free. Intimate room, real musicians, cheap drinks.', tags: ['music', 'social'], when: 'Multiple events weekly', where: '1224 Williamson St', url: 'https://www.cafecoda.club/events-1' },
+        ],
+      },
+      {
+        section: 'Dance', icon: '💃',
+        items: [
+          { name: 'The Capitol Social — Salsa & Bachata', desc: 'Beginner salsa and bachata lessons Mon/Tue. Wednesday social dancing 6:30-10:30pm.', vibe: 'Partners rotate in class. No experience needed — join at the start of a monthly cycle.', tags: ['social', 'art'], when: 'Mon & Tue lessons · Wed social', where: 'Kanopy Dance Studio, 329 W Mifflin St', url: 'https://salsamadison.net/lessons' },
+        ],
+      },
+      {
+        section: 'Make Things', icon: '🔧',
+        items: [
+          { name: 'Sector67 — Hackerspace', desc: 'Hardware, software, electronics, art, metalwork. 15 years running.', vibe: 'Open to public 1st Tuesdays. Small crowd, very friendly, half are beginners.', tags: ['making', 'tech'], when: '1st Tuesday monthly · 7pm', where: 'Madison', url: 'https://www.sector67.org/' },
+          { name: 'Polka! Press — Screen Printing & Letterpress', desc: 'Community printworks. Intro workshops monthly, $75 including all materials.', vibe: 'Artist collective energy. Make a poster, learn a press, meet printmakers.', tags: ['making', 'art'], when: '1st Wednesday monthly + multi-week courses', where: '2051 Winnebago St', url: 'https://polkapress.org/' },
+          { name: 'Textile Arts Center — Fiber Arts', desc: 'Sewing, weaving, dyeing, felting, knitting. Open studio $25/mo. Classes and workshops.', vibe: 'Looms, sewing machines, all the tools. Welcoming to total beginners.', tags: ['making', 'art'], when: 'Tue-Sat studio hours', where: 'Madison', url: 'https://www.textileartsmadison.org/' },
+          { name: 'The Kiln Shed — Pottery & Ceramics', desc: 'Wheel throwing, sculpture, glaze-making classes and memberships.', vibe: 'Small studio energy. Intro classes assume you\'ve never touched clay.', tags: ['making', 'art'], when: 'Check site for schedule', where: 'Northside Madison', url: 'https://www.thekilnshed.studio/' },
+          { name: 'Wheelhouse Studios — Pottery, Print & More', desc: 'Pottery, printmaking, workshops. Drop-in open studio $8/day. Free for UW students.', vibe: 'On campus but open to everyone. Chill, well-equipped, great instructors.', tags: ['making', 'art'], when: 'Open studio daily', where: '800 Langdon St (Memorial Union)', url: 'https://union.wisc.edu/events-and-activities/wheelhouse-studios/' },
+        ],
+      },
+      {
+        section: 'Art & Creative', icon: '🎨',
+        items: [
+          { name: 'Arts + Literature Laboratory', desc: '200+ events/year. Gallery, performances, writing center, small press library.', vibe: 'Volunteer and you\'re instantly part of the scene. Low-key, welcoming.', tags: ['art', 'social'], when: 'Ongoing · Volunteer orientation available', where: '111 S Livingston St #100', url: 'https://artlitlab.org/' },
+          { name: 'Gallery Night — City-Wide Art Crawl', desc: 'Dozens of venues open for free. Exhibitions, demos, opening receptions. Organized by MMoCA.', vibe: 'Walk gallery to gallery all evening. Everyone\'s friendly. Great for solo exploring.', tags: ['art', 'social'], when: 'Twice yearly (Spring & Fall)', where: 'City-wide', url: 'https://www.mmoca.org/events/special-events/gallery-night/gallery-night' },
+          { name: 'Madison Art Guild', desc: '140+ artists in Dane County. Exhibitions, events, support network.', vibe: 'More established artists, but newcomers are welcomed and encouraged.', tags: ['art'], when: 'Ongoing', where: 'Dane County', url: 'https://madisonartguild.wildapricot.org/' },
+          { name: 'DelecTable Madison — Social Cooking Classes', desc: 'Interactive group cooking with a chef. Max 16 people. Eat together after. $60-80.', vibe: 'You cook as a group and make friends over the meal. Wine available.', tags: ['social', 'art'], when: 'Multiple classes monthly', where: 'Madison', url: 'https://delectablemadison.com/cooking-classes/' },
+        ],
+      },
+      {
+        section: 'Night Out', icon: '🕹️',
+        items: [
+          { name: 'I/O Arcade Bar', desc: '70+ arcade & pinball games, dedicated board game room, craft cocktails, THC drinks & mocktails. Skeeball league in spring.', vibe: 'Best solo venue in Madison. Play games, drink something weird, talk to nobody or everybody.', tags: ['social'], when: 'Tue-Thu 4pm-12am · Fri 4pm-2am · Sat 11am-2:30am · Sun 11am-12am', where: '924 Williamson St', url: 'https://ioarcade.bar/' },
+          { name: 'Double Tap Beercade', desc: 'Pinball, arcade games, craft beer, Lorenzo\'s pizza. Happy hour: 50% off gaming Mon-Fri until 8pm.', vibe: 'State Street energy. All ages until 8pm, then it\'s a proper bar with great games.', tags: ['social'], when: 'Mon-Thu 5pm-2am · Fri 5pm-2:30am · Sat 12pm-2:30am · Sun 12pm-2am', where: '347 State St', url: 'https://www.doubletapbeercade.com/location/madison/' },
+        ],
+      },
+      {
+        section: 'Gaming', icon: '🎲',
+        items: [
+          { name: 'Madison D&D Adventurers League', desc: '3,208 members, 4.8★. Official organized play at 4 stores: Mon (Noble Knight), Wed (Pegasus), Thu (Misty Mountain), Sat (Noble Knight), Sun (Gamer\'s Library).', vibe: 'Walk-ins welcome. Pre-made characters available. New players get started in 10 minutes.', tags: ['social'], when: '5 days/week across 4 stores', where: 'Noble Knight (Fitchburg) · Pegasus (Odana Rd) · Misty Mountain · Gamer\'s Library (State St)', url: 'https://www.meetup.com/MadDnD/' },
+        ],
+      },
+      {
+        section: 'Sports & Rec', icon: '⚽',
+        items: [
+          { name: 'Madison Sports & Social Club', desc: 'Volleyball, softball, soccer, kickball, flag football, dodgeball, broomball. Co-ed leagues.', vibe: 'Sign up as a free agent — they\'ll put you on a team. Half the league does this.', tags: ['sports', 'social'], when: 'Leagues year-round', where: 'Various Madison locations', url: 'https://www.madisonssc.com/' },
+          { name: 'Boulders Climbing Gym', desc: 'Downtown bouldering. 8,000+ sqft. New Climber Socials, Boulder Buddies mixers, Lights Out parties.', vibe: '$15 day pass at social events. Walk in alone, leave with climbing partners.', tags: ['sports', 'social'], when: 'Mon-Sat 9am-10pm · Sun 9am-6pm', where: '129 S Carroll St (downtown)', url: 'https://www.bouldersgym.com/' },
+          { name: 'KEVA Sports — Adult Leagues', desc: 'Indoor/outdoor soccer, volleyball, basketball. All skill levels.', vibe: 'Can join as an individual. Free open play for members.', tags: ['sports'], when: 'Year-round', where: 'Madison', url: 'https://kevasports.com/adult-leagues/' },
+          { name: 'TOCA Madison — Adult Soccer', desc: 'Men\'s 40+, Men\'s Open, and co-ed divisions.', vibe: 'The 40+ division exists for a reason. Nobody\'s trying out for MLS.', tags: ['sports'], when: 'Seasonal sessions', where: 'Madison', url: 'https://www.tocafootball.com/center-programs/madison-soccer-adult-leagues' },
+          { name: 'Madison Pickleball Meetup', desc: '2,804 members, 4.8★. Structured beginner program: Intro → Learner → Newbie → Beginner. MSCR classes $15.', vibe: 'Biggest growth sport in the country. Madison has actual infrastructure for newcomers.', tags: ['sports', 'social'], when: 'Multiple sessions weekly', where: 'Various Madison courts', url: 'https://www.meetup.com/madison-pickleball-meetup-group/' },
+        ],
+      },
+      {
+        section: 'Tech & Code', icon: '💻',
+        items: [
+          { name: 'MadAI — Madison AI & ML Meetup', desc: '746 members. AI/ML talks, demos, and hackathons. Hosted a Vibe Coding Hackathon.', vibe: 'Sponsored by IEEE. Good mix of industry pros and curious beginners.', tags: ['tech', 'social'], when: 'Monthly events', where: 'Various (check Meetup)', url: 'https://www.meetup.com/madison-ai/' },
+          { name: 'Madison Area Software Developers Meetup', desc: 'Monthly meetups at a bar. Python, JS, architecture, IoT, entrepreneurship.', vibe: '99 members, informal — more like drinks with nerds than a conference talk.', tags: ['tech', 'social'], when: '3rd Wednesday monthly · 6pm', where: 'Argus BarGrille, 123 E Main St', url: 'https://www.meetup.com/softwaredev-113/' },
+          { name: '100state — Creative Coworking & Community', desc: 'Madison\'s largest coworking space. Entrepreneurs, creatives, remote workers. Art on the walls.', vibe: 'Weekly pancake breakfasts, happy hours, and hackathons. People know your name.', tags: ['tech', 'art'], when: '24/7 member access', where: '1 block off Capitol Square', url: 'https://www.100state.com/' },
+        ],
+      },
+      {
+        section: 'Seasonal', icon: '☀️',
+        items: [
+          { name: 'Concerts on the Square', desc: 'Free outdoor orchestra concerts. Blankets, picnics, wine, Capitol views.', vibe: 'THE Madison summer tradition. Bring a blanket and a friend (or make one there).', tags: ['music', 'social'], when: 'Wednesdays Jun 24 - Jul 29 · 7pm', where: 'Capitol Square', url: 'https://www.wcoconcerts.org/concerts-tickets/concerts-on-the-square-2' },
+          { name: 'Dane Dances — Rooftop Dance Party', desc: 'Live bands, free dance lessons, food and drinks. Free admission.', vibe: 'Sunset over Lake Monona, hundreds of people dancing. Best free event in town.', tags: ['music', 'social'], when: 'Every Friday in August · 5:30-9:30pm', where: 'Monona Terrace Rooftop', url: 'https://danedances.org/' },
+          { name: 'Garver Food Truck Fridays', desc: 'Food trucks, drinks, and free live music on the patio.', vibe: 'Casual Friday evening hangout. Great for wandering solo.', tags: ['social', 'music'], when: 'Fridays May 23 - Oct 3 · 5-9pm', where: 'Garver Feed Mill, 109 S Fair Oaks Ave', url: 'https://garverfeedmill.com/' },
+          { name: 'Food Pantry Gardens — Volunteer', desc: '2,100+ volunteers/year. Drop-in garden sessions Apr-Oct. No experience needed, tools provided.', vibe: 'Grow food for people who need it. Meditative, social, and genuinely useful.', tags: ['social'], when: 'Weekly sessions Apr-Oct', where: 'Various Madison garden sites', url: 'https://foodpantrygardens.org/' },
+        ],
+      },
+    ];
+
+    const ALL_TAGS = ['art', 'music', 'making', 'sports', 'tech', 'social'];
+
+    function renderFilters() {
+      const container = document.getElementById('filters');
+      const favCount = STORE.favs.length;
+      container.innerHTML =
+        `<button class="filter-btn active" data-filter="all">All</button>` +
+        ALL_TAGS.map(t => `<button class="filter-btn" data-filter="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</button>`).join('') +
+        `<button class="filter-btn filter-btn-saved" data-filter="saved">★ Saved${favCount ? ' (' + favCount + ')' : ''}</button>`;
+
+      container.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          render(btn.dataset.filter);
+        });
+      });
+    }
+
+    function renderStartHere(filter) {
+      const zone = document.getElementById('start-here-zone');
+      if (STORE.isDismissed(START_HERE.name)) { zone.innerHTML = ''; return; }
+      if (filter === 'saved' && !STORE.isFav(START_HERE.name)) { zone.innerHTML = ''; return; }
+      if (filter !== 'all' && filter !== 'saved' && !START_HERE.tags.includes(filter)) {
+        zone.innerHTML = '';
+        return;
+      }
+
+      const isFav = STORE.isFav(START_HERE.name);
+      zone.innerHTML = `
+        <div class="start-here">
+          <div class="zone-label zone-label-amber">★ Start here</div>
+          <div class="card-wrap${isFav ? ' is-fav' : ''}">
+            <a class="sh-card" href="${START_HERE.url}" target="_blank" rel="noopener">
+              <div class="sh-name">${START_HERE.name}</div>
+              <div class="sh-detail">
+                ${START_HERE.desc}<br>
+                <span class="sh-vibe">${START_HERE.vibe}</span>
+              </div>
+              <span class="sh-cta">→ Join the group</span>
+            </a>
+            <div class="card-actions">
+              <span class="action-btn fav-btn${isFav ? ' is-fav' : ''}" data-name="${START_HERE.name}">${isFav ? '★' : '☆'}</span>
+              <span class="action-btn dismiss-btn" data-name="${START_HERE.name}">×</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getTodayDayCode() {
+      return ['SUN','MON','TUE','WED','THU','FRI','SAT'][new Date().getDay()];
+    }
+
+    function renderEveryWeek(filter) {
+      const zone = document.getElementById('every-week-zone');
+      let filtered;
+      if (filter === 'saved') {
+        filtered = EVERY_WEEK.filter(e => STORE.isFav(e.name) && !STORE.isDismissed(e.name));
+      } else if (filter === 'all') {
+        filtered = EVERY_WEEK.filter(e => !STORE.isDismissed(e.name));
+      } else {
+        filtered = EVERY_WEEK.filter(e => e.tags.includes(filter) && !STORE.isDismissed(e.name));
+      }
+
+      if (filtered.length === 0) { zone.innerHTML = ''; return; }
+
+      const dayOrder = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+      const dayNames = { MON: 'Monday', TUE: 'Tuesday', WED: 'Wednesday', THU: 'Thursday', FRI: 'Friday', SAT: 'Saturday', SUN: 'Sunday' };
+      const today = getTodayDayCode();
+      const groups = {};
+      for (const e of filtered) {
+        if (!groups[e.day]) groups[e.day] = [];
+        groups[e.day].push(e);
+      }
+
+      let cardsHTML = '';
+      for (const day of dayOrder) {
+        if (!groups[day]) continue;
+        const isToday = day === today;
+        const collapsed = !isToday;
+        cardsHTML += `<div class="ew-day-header${collapsed ? ' collapsed' : ''}" data-day="${day}">
+          ${dayNames[day]}${isToday ? ' — today' : ''} <span class="day-count">${groups[day].length}</span>
+          <span class="day-toggle">▼</span>
+        </div>`;
+        cardsHTML += `<div class="ew-day-group${collapsed ? ' collapsed' : ''}" data-day-group="${day}">`;
+        cardsHTML += groups[day].map(e => {
+          const isFav = STORE.isFav(e.name);
+          return `
+            <div class="card-wrap${isFav ? ' is-fav' : ''}">
+              <a class="ew-card" href="${e.url}" target="_blank" rel="noopener">
+                <div class="ew-top">
+                  <span class="ew-cost ${e.cost === 'FREE' ? 'ew-cost-free' : 'ew-cost-paid'}">${e.cost}</span>
+                  <span class="ew-name">${e.name}</span>
+                </div>
+                <div class="ew-detail">
+                  ${e.detail}<br>
+                  <span class="ew-vibe">${e.vibe}</span>
+                </div>
+              </a>
+              <div class="card-actions">
+                <span class="action-btn fav-btn${isFav ? ' is-fav' : ''}" data-name="${e.name}">${isFav ? '★' : '☆'}</span>
+                <span class="action-btn dismiss-btn" data-name="${e.name}">×</span>
+              </div>
+            </div>`;
+        }).join('');
+        cardsHTML += `</div>`;
+      }
+
+      zone.innerHTML = `
+        <div class="every-week">
+          <div class="zone-label zone-label-green">Every week</div>
+          <div class="ew-cards">${cardsHTML}</div>
+        </div>
+      `;
+    }
+
+    function buildCardHTML(item) {
+      if (STORE.isDismissed(item.name)) return '';
+      const isFav = STORE.isFav(item.name);
+      return `
+        <div class="card-wrap${isFav ? ' is-fav' : ''}">
+          <a class="card" href="${item.url}" target="_blank" rel="noopener">
+            <div class="card-top">
+              <span class="card-name">${item.name}</span>
+              <div class="card-tags">
+                ${item.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join('')}
+              </div>
+            </div>
+            <div class="card-desc">${item.desc}</div>
+            <div class="card-vibe">${item.vibe}</div>
+            <div class="card-meta">
+              <span>📅 ${item.when}</span>
+              <span>📍 ${item.where}</span>
+              <span class="cta">→ Learn more</span>
+            </div>
+          </a>
+          <div class="card-actions">
+            <span class="action-btn fav-btn${isFav ? ' is-fav' : ''}" data-name="${item.name}">${isFav ? '★' : '☆'}</span>
+            <span class="action-btn dismiss-btn" data-name="${item.name}">×</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSections(filter) {
+      const container = document.getElementById('sections');
+      container.innerHTML = '';
+
+      if (filter === 'saved') {
+        const allFavItems = DATA.flatMap(s => s.items)
+          .filter(item => STORE.isFav(item.name) && !STORE.isDismissed(item.name));
+        const hasEwFavs = EVERY_WEEK.some(e => STORE.isFav(e.name) && !STORE.isDismissed(e.name));
+        const hasShFav = STORE.isFav(START_HERE.name) && !STORE.isDismissed(START_HERE.name);
+
+        if (allFavItems.length === 0 && !hasEwFavs && !hasShFav) {
+          container.innerHTML = '<div class="empty-state">No saved items yet. Hover over any card and click ☆ to save it.</div>';
+          return;
+        }
+
+        if (allFavItems.length > 0) {
+          if (hasEwFavs || hasShFav) {
+            const divider = document.createElement('div');
+            divider.className = 'zone-divider';
+            divider.innerHTML = '<span>Always there</span>';
+            container.appendChild(divider);
+          }
+          const wrapper = document.createElement('div');
+          wrapper.className = 'cards';
+          wrapper.innerHTML = allFavItems.map(buildCardHTML).join('');
+          container.appendChild(wrapper);
+        }
+        return;
+      }
+
+      const hasAbove = filter === 'all'
+        ? (!STORE.isDismissed(START_HERE.name) || EVERY_WEEK.some(e => !STORE.isDismissed(e.name)))
+        : ((!STORE.isDismissed(START_HERE.name) && START_HERE.tags.includes(filter)) ||
+           EVERY_WEEK.some(e => e.tags.includes(filter) && !STORE.isDismissed(e.name)));
+
+      if (hasAbove) {
+        const divider = document.createElement('div');
+        divider.className = 'zone-divider';
+        divider.innerHTML = '<span>Always there</span>';
+        container.appendChild(divider);
+      }
+
+      if (filter !== 'all') {
+        const allItems = DATA.flatMap(s => s.items)
+          .filter(item => item.tags.includes(filter) && !STORE.isDismissed(item.name));
+        if (allItems.length === 0) return;
+
+        const count = document.createElement('div');
+        count.className = 'filter-result-count';
+        count.textContent = `${allItems.length} result${allItems.length === 1 ? '' : 's'}`;
+        container.appendChild(count);
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'cards';
+        wrapper.innerHTML = allItems.map(buildCardHTML).join('');
+        container.appendChild(wrapper);
+      } else {
+        for (const section of DATA) {
+          const visibleItems = section.items.filter(item => !STORE.isDismissed(item.name));
+          if (visibleItems.length === 0) continue;
+
+          const sec = document.createElement('div');
+          sec.className = 'section';
+          sec.innerHTML = `
+            <div class="section-header">
+              <span class="section-icon">${section.icon}</span>
+              <span class="section-title">${section.section}</span>
+              <span class="section-count">${visibleItems.length}</span>
+            </div>
+            <div class="cards">
+              ${visibleItems.map(buildCardHTML).join('')}
+            </div>
+          `;
+          container.appendChild(sec);
+        }
+      }
+    }
+
+    function renderHiddenCount() {
+      const zone = document.getElementById('hidden-zone');
+      const count = STORE.dismissed.length;
+      if (count === 0) { zone.innerHTML = ''; return; }
+      zone.innerHTML = `<div class="hidden-count" id="restore-all">${count} hidden item${count === 1 ? '' : 's'} · click to restore</div>`;
+    }
+
+    function currentFilter() {
+      return document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    }
+
+    function render(filter) {
+      renderStartHere(filter);
+      renderEveryWeek(filter);
+      renderSections(filter);
+      renderHiddenCount();
+      const savedBtn = document.querySelector('.filter-btn-saved');
+      if (savedBtn) {
+        const c = STORE.favs.length;
+        savedBtn.textContent = '★ Saved' + (c ? ' (' + c + ')' : '');
+      }
+    }
+
+    document.querySelector('.container').addEventListener('click', e => {
+      const dayHeader = e.target.closest('.ew-day-header');
+      if (dayHeader) {
+        const day = dayHeader.dataset.day;
+        const group = document.querySelector(`[data-day-group="${day}"]`);
+        if (group) {
+          dayHeader.classList.toggle('collapsed');
+          group.classList.toggle('collapsed');
+        }
+        return;
+      }
+
+      const fav = e.target.closest('.fav-btn');
+      if (fav) {
+        e.preventDefault();
+        e.stopPropagation();
+        STORE.toggleFav(fav.dataset.name);
+        render(currentFilter());
+        return;
+      }
+      const dismiss = e.target.closest('.dismiss-btn');
+      if (dismiss) {
+        e.preventDefault();
+        e.stopPropagation();
+        STORE.dismiss(dismiss.dataset.name);
+        render(currentFilter());
+        return;
+      }
+      const restore = e.target.closest('#restore-all');
+      if (restore) {
+        STORE.restoreAll();
+        render(currentFilter());
+        return;
+      }
+    });
+
+    renderFilters();
+    render('all');
+  </script>
+</body>
+</html>

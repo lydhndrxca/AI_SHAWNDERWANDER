@@ -1,0 +1,4 @@
+.env
+_converted/
+results/
+__pycache__/
